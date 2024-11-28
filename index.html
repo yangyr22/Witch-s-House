@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,28 +78,17 @@
             console.error('Element with id "optionsButton" not found.');
           }
         });
+        document.addEventListener('DOMContentLoaded', function() {
+          const optionsButton = document.getElementById('startButton');
+          if (optionsButton) {
+            optionsButton.addEventListener('click', function() {
+              window.location.href = 'start.html';
+            });
+          } else {
+            console.error('Element with id "startButton" not found.');
+          }
+        });
     </script>
     <script type="module" src="/main.js"></script>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>My Three.js App</title>
-    <style>
-        body { margin: 0; }
-        canvas {
-            display: block;
-            position: absolute;
-            width: 100%; /* Full width minus button container width */
-            height: 100%;
-            z-index: 5;
-        }
-    </style>
-</head>
-<body>
-    <script type="module" src="/main_control.js"></script>
 </body>
 </html>
