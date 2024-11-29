@@ -2,8 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Rouge+Script&display=swap" rel="stylesheet">
     <meta charset="utf-8">
-    <title>My Three.js App</title>
+    <title>Game</title>
     <style>
         body { margin: 0; }
         canvas {
@@ -13,9 +16,55 @@
             height: 100%;
             z-index: 5;
         }
+        #selectDiv {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 300px;
+            width: 500px;
+            transform: translate(-50%, -50%);
+            background-color: rgba(88, 88, 88, 0.9);
+            color: black;
+            font-size: 32px;
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 10px;
+            border: 10px solid black;
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            display: none;
+        }
+        #selectDiv button {
+            margin: 10px;
+            padding: 10px 20px;
+            width: 100%;
+            font-size: 32px;
+            font-family: "Lobster", sans-serif;
+            cursor: pointer;
+            background-color: rgba(88, 88, 88, 0);
+            border-color: rgba(88, 88, 88, 0);
+        }
+        #selectDiv button:hover{
+            background-image: linear-gradient(to right, rgba(44, 44, 44, 0.3), rgba(44, 44, 44, 1),rgba(44, 44, 44, 1), rgba(44, 44, 44, 0.3));
+            color: rgba(176, 176, 176, 1);
+        }
     </style>
 </head>
 <body>
+    <audio id="open-audio" src="audio\open1+xxx.ogg" autoplay></audio>
+    <audio id="new-game-audio" loop>
+        <source src="audio\queen.ogg" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <div id="selectDiv">
+        <div>Do you want to read the books?</div>
+        <button id="yesButton">Yes</button>
+        <button id="noButton">No</button>
+    </div> 
     <script type="module" src="/start.js"></script>
 </body>
 </html>

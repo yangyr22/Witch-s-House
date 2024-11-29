@@ -9,6 +9,18 @@ let turnSpeed = 0.01;
 let rotationTarget = 0;
 let rotationDirection = 1; 
 
+window.onload = function() {
+  var audio = document.getElementById('option-game-audio');
+
+  var oldAudio = document.getElementById('background-audio');
+  if (oldAudio) {
+      oldAudio.pause();
+      oldAudio.currentTime = 0;
+  }
+
+  audio.play();
+};
+
 init();
 animate();
 
