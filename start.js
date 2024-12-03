@@ -3,8 +3,8 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 
-let scene, camera, renderer, selectElement, selecting;
-let moveSpeed = 5;
+let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton;
+let moveSpeed;
 let turnSpeed = 0.01;
 let keyPressed = {}; 
 
@@ -47,7 +47,19 @@ function init() {
   scene.add(directionalLight);
 
 
-  selectElement = document.getElementById('selectDiv');
+  selectElement = document.getElementById('select1');
+  readElement = document.getElementById('Read');
+  yesButton = document.getElementById('yesButton');
+  noButton = document.getElementById('noButton');
+
+  yesButton.addEventListener('click', function() {
+      readElement.style.display = 'flex';
+      selectElement.style.display = 'none'; // Hide the text
+  });
+  noButton.addEventListener('click', function() {
+      selectElement.style.display = 'none';
+      selecting = false;
+  });
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('room1/ground.jpg'); // 替换为你的纹理图片路径
@@ -123,7 +135,7 @@ function init() {
     //   object.rotation.z = Math.PI / 2;
       object.position.x = -300;
       object.position.y = -200;
-      object.position.z = -500;
+      object.position.z = -480;
       scene.add(object);
       object.traverse(function (child) {
         if (child.isMesh) {
@@ -270,6 +282,11 @@ function animate() {
   while (camera.rotation.y < -Math.PI) {
     camera.rotation.y += 2 * Math.PI;
   }
+  if (keyPressed['ShiftLeft']) {
+    moveSpeed = 6;
+  }else{
+    moveSpeed = 2;
+  }
   if (selecting == false){
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
@@ -301,12 +318,12 @@ function animate() {
     if (keyPressed['ArrowRight']) {
       camera.rotation.y -= turnSpeed;
     }
-    if (keyPressed['ArrowUp']) {
-      camera.position.y += moveSpeed;
-    }
-    if (keyPressed['ArrowDown']) {
-      camera.position.y -= moveSpeed;
-    }
+    // if (keyPressed['ArrowUp']) {
+    //   camera.position.y += moveSpeed;
+    // }
+    // if (keyPressed['ArrowDown']) {
+    //   camera.position.y -= moveSpeed;
+    // }
     if (keyPressed['Space'] && face_book()) {
       selectElement.style.display = 'flex'; 
       selecting = true;
@@ -318,11 +335,10 @@ function animate() {
   } else{
     if (keyPressed['Escape']) {
       selectElement.style.display = 'none'; 
+      readElement.style.display = 'none';
       selecting = false;
     }
   }
-  camera.position.x = Math.min(Math.max(camera.position.x, -450), 450)
-  camera.position.z = Math.min(Math.max(camera.position.z, -450), 450)
   renderer.render(scene, camera);
 }
 

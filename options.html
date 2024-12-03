@@ -88,7 +88,7 @@
             const return_arrow = document.getElementById('return-arrow');
             if (return_arrow) {
                 return_arrow.addEventListener('click', function(event) {
-                window.location.href = 'index.html'; // 确保路径正确
+                window.history.back();
                 });
             } else {
                 console.error('Element with id "return-arrow" not found.');

@@ -16,7 +16,20 @@
             height: 100%;
             z-index: 5;
         }
-        #selectDiv {
+        #minimapDiv{
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            height: 200px;
+            width: 200px;
+            background-image: url('room1/minimap.png'); /* 设置背景图片 */
+            background-size: cover; /* 覆盖整个div */
+            background-position: center;
+            border: 3px solid black;
+            padding: 10px;
+            z-index: 10;
+        }
+        .selectDiv {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -38,7 +51,15 @@
             border-radius: 20px;
             display: none;
         }
-        #selectDiv button {
+        /* .selectDiv .english {
+            font-family: "Lobster", sans-serif;
+        }
+
+        /* 中文字体 */
+        /* .selectDiv .chinese {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        } */
+        .selectDiv button {
             margin: 10px;
             padding: 10px 20px;
             width: 100%;
@@ -48,23 +69,53 @@
             background-color: rgba(88, 88, 88, 0);
             border-color: rgba(88, 88, 88, 0);
         }
-        #selectDiv button:hover{
+        .selectDiv button:hover{
             background-image: linear-gradient(to right, rgba(44, 44, 44, 0.3), rgba(44, 44, 44, 1),rgba(44, 44, 44, 1), rgba(44, 44, 44, 0.3));
             color: rgba(176, 176, 176, 1);
         }
     </style>
 </head>
 <body>
-    <audio id="open-audio" src="audio\open1+xxx.ogg" autoplay></audio>
-    <audio id="new-game-audio" loop>
-        <source src="audio\queen.ogg" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
-    <div id="selectDiv">
+    <audio id="open-audio" src="audio/open1+xxx.ogg" autoplay></audio>
+    <audio id="next-audio" src="audio/queen.ogg"></audio>
+    <script>
+        const openAudio = document.getElementById("open-audio");
+        const nextAudio = document.getElementById("next-audio");
+    
+        openAudio.onended = function() {
+            // Wait for 1 second (1000 ms) after the first audio ends, then play the second audio
+            setTimeout(function() {
+                nextAudio.play();
+            }, 1000);  // 1000 ms delay
+        };
+    </script>
+    <div id="minimapDiv"> </div>
+    <div class="selectDiv" id="select1">
         <div>Do you want to read the books?</div>
         <button id="yesButton">Yes</button>
         <button id="noButton">No</button>
+    </div>
+    <div class="selectDiv" id="Read">
+        <div>
+            她们的眼睛颜色，会因发色各异而不同
+        </div>
+        <div>
+            发色有「银·黑·金·红」4个种类，瞳色有「茶·绿·蓝·红」4个种类。
+        </div>
+        <div>
+            银发的女性，有红色的眼睛
+        </div>
+        <div>
+            茶色眼睛的女性，可能是金发也可能是红发
+        </div>
     </div> 
+    <script type="module">
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'KeyX') {
+                window.location.href = 'options.html';
+            }
+        });
+    </script>
     <script type="module" src="/start.js"></script>
 </body>
 </html>

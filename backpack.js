@@ -88,6 +88,30 @@ function init() {
       console.error('An error happened', error);
     }
   );
+  const objLoader = new OBJLoader();
+  objLoader.load(
+    'witch/77807.obj',
+    function (object) {
+      menObject = new THREE.Object3D(); 
+      menObject.position.set(0, 70, 0);
+      menObject.rotation.x = -Math.PI / 2;
+      menObject.rotation.z = -Math.PI / 3;
+      object.traverse(function (child) {
+        if (child.isMesh) {
+          child.castShadow = true; 
+          child.receiveShadow = true; 
+        }
+      });
+      menObject.add(object);
+      scene.add(menObject);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    function (error) {
+      console.error('An error happened', error);
+    }
+  );
 }
 
 

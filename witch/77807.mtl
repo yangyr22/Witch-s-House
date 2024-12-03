@@ -35,7 +35,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\Wosy2_baseColor.png
+map_Kd Wosy2_baseColor.png
 
 newmtl Black
 Ka 0.117647 0.117647 0.117647
@@ -68,7 +68,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\material_baseColor.png
+map_Kd material_baseColor.png
 
 newmtl koszulka
 Ka 0.117647 0.117647 0.117647
@@ -93,7 +93,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\Skra_baseColor.png
+map_Kd Skra_baseColor.png
 
 newmtl OCZKI
 Ka 0.117647 0.117647 0.117647
@@ -102,7 +102,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\OCZKI_baseColor.png
+map_Kd OCZKI_baseColor.png
 
 newmtl Blue_dress.003
 Ka 0.117647 0.117647 0.117647
@@ -111,7 +111,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\Blue_dress.003_baseColor.png
+map_Kd Blue_dress.003_baseColor.png
 
 newmtl yellow
 Ka 0.117647 0.117647 0.117647
@@ -128,7 +128,7 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\BROWN_baseColor.jpeg
+map_Kd BROWN_baseColor.jpeg
 
 newmtl material_4
 Ka 0.117647 0.117647 0.117647
@@ -137,4 +137,4 @@ Ks 0.752941 0.752941 0.752941
 Tr 1.000000
 d 1.000000
 Ns 600.000000
-map_Kd D:\AAA_lesson_docu\AGC\project\witch\textures\material_4_baseColor.png
+map_Kd material_4_baseColor.png
