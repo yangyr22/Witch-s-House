@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Lobster&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <title>3D Model and Grid Layout</title>
     <style>
@@ -40,6 +43,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        #title-container {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            font-size: 80px;
+            font-family: "Henny Penny", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            background-color:  rgba(0, 0, 0, 0);
+            color: rgb(0, 83, 0);
+            z-index: 1;
         }
         #grid-container {
             position: fixed;
@@ -81,6 +97,7 @@
         Your browser does not support the audio element.
     </audio>
     <audio id="back-audio" src="audio/Save.ogg"></audio>
+    <div id="title-container">TOOLBAR</div>
     <div id="model-container">
         <a href="#" id="return-arrow">   &#x2190; </a>
         <script type="module">
