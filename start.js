@@ -7,6 +7,10 @@ let scene, camera, renderer, selectElement, selecting, readElement, yesButton, n
 let moveSpeed;
 let turnSpeed = 0.01;
 let keyPressed = {}; 
+let shakeAmount = 0.05;
+let shakeTimer = 0; 
+let shaked = false;
+let PositionCopy = new THREE.Euler();
 
 init();
 animate();
@@ -272,22 +276,36 @@ function init() {
   document.addEventListener('keyup', function(event) {
     keyPressed[event.code] = false; 
   });
+
+  PositionCopy.clone(camera.rotation);
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  while (camera.rotation.y > Math.PI) {
-    camera.rotation.y -= 2 * Math.PI;
+  if (shakeTimer > 0) {
+    shakeTimer--;
+    console.log(shakeTimer, PositionCopy.x, PositionCopy.y, PositionCopy.z);
+    camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
+    camera.rotation.y += (Math.random() - 0.5) * shakeAmount;
+    camera.rotation.z += (Math.random() - 0.5) * shakeAmount;
+    if (shakeTimer == 0){
+      camera.rotation.x = PositionCopy.x;
+      camera.rotation.y = PositionCopy.y;
+      camera.rotation.z = PositionCopy.z;
+    }
   }
-  while (camera.rotation.y < -Math.PI) {
-    camera.rotation.y += 2 * Math.PI;
-  }
-  if (keyPressed['ShiftLeft']) {
-    moveSpeed = 6;
-  }else{
-    moveSpeed = 2;
-  }
-  if (selecting == false){
+  else if (shakeTimer == 0 && selecting == false){
+    while (camera.rotation.y > Math.PI) {
+      camera.rotation.y -= 2 * Math.PI;
+    }
+    while (camera.rotation.y < -Math.PI) {
+      camera.rotation.y += 2 * Math.PI;
+    }
+    if (keyPressed['ShiftLeft']) {
+      moveSpeed = 6;
+    }else{
+      moveSpeed = 2;
+    }
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
     const forward = new THREE.Vector3();
@@ -331,6 +349,15 @@ function animate() {
     if (cannot_go(camera.position.x, camera.position.z)){
         camera.position.x = x_copy;
         camera.position.z = z_copy;
+        if (shaked == false){
+          PositionCopy.clone(camera.rotation);
+          // console.log(PositionCopy.x, PositionCopy.x, PositionCopy.z);
+          shakeTimer = 10;
+          shaked = true;
+        }
+    }
+    else{
+      shaked = false;
     }
   } else{
     if (keyPressed['Escape']) {
