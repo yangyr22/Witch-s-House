@@ -90,8 +90,11 @@
         });
     </script>
     <script type="module" src="/main.js"></script>
-    <audio id="background-audio" autoplay loop>
-      <source src="audio\mainpage.mp3" type="audio/mp3">
-    </audio>
+
+    <audio id="mainpage" src="audio/mainpage.ogg" loop></audio>
+    <script>
+        const MainPageAudio = document.getElementById("mainpage");
+        MainPageAudio.play();
+    </script>
 </body>
 </html>

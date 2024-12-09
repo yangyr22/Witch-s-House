@@ -1,13 +1,13 @@
 {
-  "hash": "2800751b",
-  "configHash": "ea17a0c1",
+  "hash": "b5fd00dd",
+  "configHash": "22a35381",
   "lockfileHash": "e3b0c442",
-  "browserHash": "f7921af2",
+  "browserHash": "5e4c7182",
   "optimized": {
     "three": {
       "src": "../../node_modules/three/build/three.module.js",
       "file": "three.js",
-      "fileHash": "d8e04447",
+      "fileHash": "529fe064",
       "needsInterop": false
     }
   },

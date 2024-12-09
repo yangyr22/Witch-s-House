@@ -85,17 +85,16 @@
     </style>
 </head>
 <body>
-    <audio id="open-audio" src="audio/open1+xxx.ogg" autoplay></audio>
-    <audio id="next-audio" src="audio/queen.ogg"></audio>
+    <audio id="open" src="audio/open.ogg" autoplay></audio>
+    <audio id="queen" src="audio/queen.ogg" loop></audio>
     <script>
-        const openAudio = document.getElementById("open-audio");
-        const nextAudio = document.getElementById("next-audio");
+        const openAudio = document.getElementById("open");
+        const nextAudio = document.getElementById("next");
     
         openAudio.onended = function() {
-            // Wait for 1 second (1000 ms) after the first audio ends, then play the second audio
-            setTimeout(function() {
+            SetTimeout(function() {
                 nextAudio.play();
-            }, 1000);  // 1000 ms delay
+            }, 1000);
         };
     </script>
     <div id="minimapDiv"> 
