@@ -29,6 +29,15 @@
             padding: 10px;
             z-index: 10;
         }
+        #cameraArrow{
+            position: absolute; 
+            width: 0; 
+            height: 0; 
+            color: green;
+            border-left: 10px solid transparent; 
+            border-right: 10px solid transparent; 
+            border-bottom: 10px solid green;
+        }
         .selectDiv {
             position: absolute;
             top: 50%;
@@ -89,7 +98,9 @@
             }, 1000);  // 1000 ms delay
         };
     </script>
-    <div id="minimapDiv"> </div>
+    <div id="minimapDiv"> 
+        <div id="cameraArrow"></div>
+    </div>
     <div class="selectDiv" id="select1">
         <div>Do you want to read the books?</div>
         <button id="yesButton">Yes</button>
@@ -119,6 +130,6 @@
             }
         });
     </script>
-    <script type="module" src="/start.js"></script>
+    <script type="module" src="/room1.js"></script>
 </body>
 </html>

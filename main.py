@@ -9,9 +9,9 @@ def modify_obj_content(file_path):
             parts = line.split()
             if len(parts) >= 4:
                 # 修改三个数字
-                parts[1] = str(float(parts[1]) / 2)
-                parts[2] = str(float(parts[2]) / 2)
-                parts[3] = str(float(parts[3]) / 2)
+                parts[1] = str(float(parts[1]) * 3)
+                parts[2] = str(float(parts[2]) * 3)
+                parts[3] = str(float(parts[3]) * 3)
                 new_line = ' '.join(parts) + '\n'
                 modified_lines.append(new_line)
             else:
@@ -26,7 +26,7 @@ def modify_obj_content(file_path):
         file.writelines(modified_lines)
 
 # OBJ文件路径
-file_path = '78824/78824.obj'
+file_path = 'room1/door1/models/8.obj'
 
 # 修改OBJ内容并写回文件
 modify_obj_content(file_path)

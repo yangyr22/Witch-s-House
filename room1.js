@@ -3,14 +3,14 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 
-let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton;
+let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
 let moveSpeed;
 let turnSpeed = 0.01;
 let keyPressed = {}; 
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
-let PositionCopy = new THREE.Euler();
+let PositionCopy;
 
 init();
 animate();
@@ -28,7 +28,7 @@ window.onload = function() {
 };
 
 function init() {
-  // Create the scene
+  // Create the scene ************************************************************************************************************************************************
   selecting = false;
   scene = new THREE.Scene();
 
@@ -46,15 +46,19 @@ function init() {
   // Add lights to the scene
   const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
-  directionalLight.position.set(-1, 1, 1);
-  scene.add(directionalLight);
+  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
+  directionalLight1.position.set(0, 1000, 0);
+  scene.add(directionalLight1);
+  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight2.position.set(-1, 1, 1);
+  scene.add(directionalLight2);
 
-
+  // Event handling *************************************************************************************************************************************************
   selectElement = document.getElementById('select1');
   readElement = document.getElementById('Read');
   yesButton = document.getElementById('yesButton');
   noButton = document.getElementById('noButton');
+  cameraArrow = document.getElementById('cameraArrow');
 
   yesButton.addEventListener('click', function() {
       readElement.style.display = 'flex';
@@ -194,6 +198,45 @@ function init() {
     }
   );
 
+  mtlLoader.load(
+    'room1/door1/models/8.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'room1/door1/models/8.obj',
+        function (object) {
+          object.scale.set(8, 8, 8);
+          // object.rotation.x = -Math.PI;
+          // object.rotation.z = -Math.PI;
+          // object.rotation.x = -Math.PI;
+          object.position.z = 630;
+          object.position.x = 250;
+          object.position.y = 250;
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function (error) {
+          console.error('An error happened', error);
+        }
+      );
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    function (error) {
+      console.error('An error happened', error);
+    }
+  );
 
   mtlLoader.load(
     'room1/chair/Straight_Leg_Chair_Honey_V1.mtl',
@@ -277,21 +320,21 @@ function init() {
     keyPressed[event.code] = false; 
   });
 
-  PositionCopy.clone(camera.rotation);
+  PositionCopy = 0;
 }
 
 function animate() {
   requestAnimationFrame(animate);
   if (shakeTimer > 0) {
     shakeTimer--;
-    console.log(shakeTimer, PositionCopy.x, PositionCopy.y, PositionCopy.z);
+    console.log(shakeTimer, PositionCopy);
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
     camera.rotation.y += (Math.random() - 0.5) * shakeAmount;
     camera.rotation.z += (Math.random() - 0.5) * shakeAmount;
     if (shakeTimer == 0){
-      camera.rotation.x = PositionCopy.x;
-      camera.rotation.y = PositionCopy.y;
-      camera.rotation.z = PositionCopy.z;
+      camera.rotation.x = 0;
+      camera.rotation.y = PositionCopy;
+      camera.rotation.z = 0;
     }
   }
   else if (shakeTimer == 0 && selecting == false){
@@ -350,8 +393,7 @@ function animate() {
         camera.position.x = x_copy;
         camera.position.z = z_copy;
         if (shaked == false){
-          PositionCopy.clone(camera.rotation);
-          // console.log(PositionCopy.x, PositionCopy.x, PositionCopy.z);
+          PositionCopy = camera.rotation.y;
           shakeTimer = 10;
           shaked = true;
         }
@@ -366,6 +408,7 @@ function animate() {
       selecting = false;
     }
   }
+  updateCameraArrow();
   renderer.render(scene, camera);
 }
 
@@ -389,4 +432,22 @@ function cannot_go(x, z){
         return true;
     }
     return false;
+}
+
+
+function updateCameraArrow() {
+  const position = camera.position;
+  const direction = -camera.rotation.y;
+
+  // 将方向转换为小地图上的相对位置
+  const arrowX = position.x / 5 + 110; // 假设小地图宽度为400px，中心为200px
+  const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
+
+  // 更新箭头的位置
+  cameraArrow.style.left = arrowX + 'px';
+  cameraArrow.style.top = arrowY + 'px';
+
+  // 更新箭头的方向
+  const rotation = `rotate(${direction}rad)`;
+  cameraArrow.style.transform = `translate(-50%, -50%) ${rotation}`;
 }
