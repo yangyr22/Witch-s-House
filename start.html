@@ -89,10 +89,10 @@
     <audio id="queen" src="audio/queen.ogg" loop></audio>
     <script>
         const openAudio = document.getElementById("open");
-        const nextAudio = document.getElementById("next");
+        const nextAudio = document.getElementById("queen");
     
         openAudio.onended = function() {
-            SetTimeout(function() {
+            setTimeout(function() {
                 nextAudio.play();
             }, 1000);
         };

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Rouge+Script&display=swap" rel="stylesheet">
     <meta charset="utf-8">
-    <title>My Three.js App</title>
+    <title>Game</title>
     <style>
         body { margin: 0; }
         #EmptyContainer {
@@ -89,12 +90,13 @@
           }
         });
     </script>
-    <script type="module" src="/main.js"></script>
-
     <audio id="mainpage" src="audio/mainpage.ogg" loop></audio>
     <script>
         const MainPageAudio = document.getElementById("mainpage");
         MainPageAudio.play();
     </script>
+    <script type="module" src="main.js"></script>
+    
+    
 </body>
 </html>
