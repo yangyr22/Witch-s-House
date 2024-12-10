@@ -100,6 +100,7 @@
     <div id="minimapDiv"> 
         <div id="cameraArrow"></div>
     </div>
+    <div id="room" data-param="value"></div>
     <div class="selectDiv" id="select1">
         <div>Do you want to read the books?</div>
         <button id="yesButton">Yes</button>
@@ -120,6 +121,8 @@
         </div>
     </div> 
     <script type="module">
+        var current_room = 1;
+        var last_room = 1;
         document.addEventListener('keydown', function(event) {
             if (event.code === 'KeyX') {
                 window.location.href = 'options.html';
@@ -129,6 +132,6 @@
             }
         });
     </script>
-    <script type="module" src="/room1.js"></script>
+    <script type="module" src="/start.js"></script>
 </body>
 </html>

@@ -5,29 +5,21 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 
 let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
 let moveSpeed;
-let turnSpeed = 0.01;
+let turnSpeed = 0.006;
 let keyPressed = {}; 
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
 let PositionCopy;
+let SpaceUp = true;
 
-init();
-animate();
 
-window.onload = function() {
-    var audio = document.getElementById('new-game-audio');
-  
-    var oldAudio = document.getElementById('background-audio');
-    if (oldAudio) {
-        oldAudio.pause();
-        oldAudio.currentTime = 0;
-    }
-  
-    audio.play();
-};
+// console.log(1);
+// init_1(1);
+// animate_1();
+// requestAnimationFrame(animate_1);
 
-function init() {
+export function init_1(last_room) {
   // Create the scene ************************************************************************************************************************************************
   selecting = false;
   scene = new THREE.Scene();
@@ -323,11 +315,9 @@ function init() {
   PositionCopy = 0;
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+export function animate_1(current_room, last_room) {
   if (shakeTimer > 0) {
     shakeTimer--;
-    console.log(shakeTimer, PositionCopy);
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
     camera.rotation.y += (Math.random() - 0.5) * shakeAmount;
     camera.rotation.z += (Math.random() - 0.5) * shakeAmount;
@@ -345,9 +335,9 @@ function animate() {
       camera.rotation.y += 2 * Math.PI;
     }
     if (keyPressed['ShiftLeft']) {
-      moveSpeed = 6;
+      moveSpeed = 2.4;
     }else{
-      moveSpeed = 2;
+      moveSpeed = 1.2;
     }
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
@@ -384,10 +374,17 @@ function animate() {
     // }
     // if (keyPressed['ArrowDown']) {
     //   camera.position.y -= moveSpeed;
-    // }
-    if (keyPressed['Space'] && face_book()) {
-      selectElement.style.display = 'flex'; 
-      selecting = true;
+    // }    
+    if (keyPressed['Space']){
+      if (SpaceUp === true) {
+        if (face_book()){
+            selectElement.style.display = 'flex'; 
+            selecting = true;
+        }
+        if (face_door()){
+          current_room = 2;
+        }
+      }
     }
     if (cannot_go(camera.position.x, camera.position.z)){
         camera.position.x = x_copy;
@@ -401,8 +398,14 @@ function animate() {
     else{
       shaked = false;
     }
+    if ('Space' in keyPressed && keyPressed['Space'] === true){
+      SpaceUp = false;
+    }
+    else{
+      SpaceUp = true;
+    }
   } else{
-    if (keyPressed['Escape']) {
+    if (keyPressed['Space'] && readElement.style.display==='flex') {
       selectElement.style.display = 'none'; 
       readElement.style.display = 'none';
       selecting = false;
@@ -410,18 +413,27 @@ function animate() {
   }
   updateCameraArrow();
   renderer.render(scene, camera);
+  return current_room;
 }
 
 function face_book(){
     if (camera.position.x >= -200 || camera.position.z >= -200){
-        console.log(camera.position.x + ' ' +camera.position.z +' not in book range.')
         return false;
     }
     if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= -Math.PI / 4){
-        console.log(camera.rotation.y + ' not facing book.')
         return false;
     }
     return true;
+}
+
+function face_door(){
+  if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
+      return false;
+  }
+  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
+      return false;
+  }
+  return true;
 }
 
 function cannot_go(x, z){
