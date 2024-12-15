@@ -2,14 +2,93 @@
   "hash": "2800751b",
   "configHash": "ea17a0c1",
   "lockfileHash": "e3b0c442",
-  "browserHash": "f7921af2",
+  "browserHash": "d1748422",
   "optimized": {
     "three": {
       "src": "../../node_modules/three/build/three.module.js",
       "file": "three.js",
-      "fileHash": "d8e04447",
+      "fileHash": "f177833b",
+      "needsInterop": false
+    },
+    "vite": {
+      "src": "../../node_modules/vite/dist/node/index.js",
+      "file": "vite.js",
+      "fileHash": "a7a8785a",
       "needsInterop": false
     }
   },
-  "chunks": {}
+  "chunks": {
+    "__vite-optional-peer-dep_lightningcss_vite-LUUMBJI5": {
+      "file": "__vite-optional-peer-dep_lightningcss_vite-LUUMBJI5.js"
+    },
+    "node_http2-W64H5OP4": {
+      "file": "node_http2-W64H5OP4.js"
+    },
+    "watch-WS5C6MUA": {
+      "file": "watch-WS5C6MUA.js"
+    },
+    "rollup-K2DXRWK7": {
+      "file": "rollup-K2DXRWK7.js"
+    },
+    "chunk-3J72CD7C": {
+      "file": "chunk-3J72CD7C.js"
+    },
+    "node_http-GDIYQ74I": {
+      "file": "node_http-GDIYQ74I.js"
+    },
+    "node_https-QBBQ6FT2": {
+      "file": "node_https-QBBQ6FT2.js"
+    },
+    "dep-D-7KCb9p-AU5QPDDD": {
+      "file": "dep-D-7KCb9p-AU5QPDDD.js"
+    },
+    "dep-C6EFp3uH-6OKOUDOV": {
+      "file": "dep-C6EFp3uH-6OKOUDOV.js"
+    },
+    "postcss-3AVNWGYI": {
+      "file": "postcss-3AVNWGYI.js"
+    },
+    "dep-Ba1kN6Mp-F37SFGI3": {
+      "file": "dep-Ba1kN6Mp-F37SFGI3.js"
+    },
+    "chunk-PDIQZD67": {
+      "file": "chunk-PDIQZD67.js"
+    },
+    "chunk-WW6FQWIM": {
+      "file": "chunk-WW6FQWIM.js"
+    },
+    "chunk-SEQ2BS34": {
+      "file": "chunk-SEQ2BS34.js"
+    },
+    "chunk-LKHS7QDZ": {
+      "file": "chunk-LKHS7QDZ.js"
+    },
+    "chunk-FATLNOVU": {
+      "file": "chunk-FATLNOVU.js"
+    },
+    "chunk-DM6VNHCA": {
+      "file": "chunk-DM6VNHCA.js"
+    },
+    "chunk-EF6WBC6R": {
+      "file": "chunk-EF6WBC6R.js"
+    },
+    "chunk-AW2EMQN5": {
+      "file": "chunk-AW2EMQN5.js"
+    },
+    "chunk-UPV5HQY4": {
+      "file": "chunk-UPV5HQY4.js"
+    },
+    "chunk-ZHYXMNUQ": {
+      "file": "chunk-ZHYXMNUQ.js"
+    },
+    "chunk-2FRTOIJ3": {
+      "file": "chunk-2FRTOIJ3.js"
+    },
+    "chunk-PSMGTXPV": {
+      "file": "chunk-PSMGTXPV.js"
+    },
+    "chunk-ZSMWDLMK": {
+      "file": "chunk-ZSMWDLMK.js"
+    }
+  }
 }

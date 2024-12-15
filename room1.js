@@ -2,11 +2,11 @@ import * as THREE from 'three';
 import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
+import { createWall } from './utils.js';
 
 let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
 let moveSpeed;
 let turnSpeed = 0.006;
-let keyPressed = {}; 
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
@@ -44,25 +44,10 @@ export function init_1(last_room) {
   const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
   directionalLight2.position.set(-1, 1, 1);
   scene.add(directionalLight2);
-
-  // Event handling *************************************************************************************************************************************************
-  selectElement = document.getElementById('select1');
-  readElement = document.getElementById('Read');
-  yesButton = document.getElementById('yesButton');
-  noButton = document.getElementById('noButton');
   cameraArrow = document.getElementById('cameraArrow');
 
-  yesButton.addEventListener('click', function() {
-      readElement.style.display = 'flex';
-      selectElement.style.display = 'none'; // Hide the text
-  });
-  noButton.addEventListener('click', function() {
-      selectElement.style.display = 'none';
-      selecting = false;
-  });
-
   const textureLoader = new THREE.TextureLoader();
-  const groundTexture = textureLoader.load('room1/ground.jpg'); // 替换为你的纹理图片路径
+  const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
 
   const groundMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
@@ -71,7 +56,7 @@ export function init_1(last_room) {
     roughness: 1.0, // 设置粗糙度
   });
 
-  const carpetTexture = textureLoader.load('room1/carpet.jpg'); // 替换为你的纹理图片路径
+  const carpetTexture = textureLoader.load('global/carpet.jpg'); // 替换为你的纹理图片路径
 
   const carpetMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
@@ -80,7 +65,7 @@ export function init_1(last_room) {
     roughness: 1.0, // 设置粗糙度
   });
 
-  const WallTexture = textureLoader.load('room1/wall.jpg');
+  const WallTexture = textureLoader.load('global/wall.jpg');
 
   const WallMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
@@ -102,29 +87,10 @@ export function init_1(last_room) {
   carpet.position.y = -199;
   scene.add(carpet);
 
-  const WallGeometry = new THREE.PlaneGeometry(1000, 1000);
-  const Wall1 = new THREE.Mesh(WallGeometry, WallMaterial);
-  Wall1.rotation.y = Math.PI / 2; 
-  Wall1.position.y += 300;
-  Wall1.position.x -= 500;
-  scene.add(Wall1);
-
-  const Wall2 = new THREE.Mesh(WallGeometry, WallMaterial);
-  Wall2.rotation.y = -Math.PI / 2; 
-  Wall2.position.y += 300;
-  Wall2.position.x += 500;
-  scene.add(Wall2);
-
-  const Wall3 = new THREE.Mesh(WallGeometry, WallMaterial);
-  Wall3.position.y += 300;
-  Wall3.position.z -= 500;
-  scene.add(Wall3);
-
-  const Wall4 = new THREE.Mesh(WallGeometry, WallMaterial);
-  Wall4.rotation.y = Math.PI;
-  Wall4.position.y += 300;
-  Wall4.position.z += 500;
-  scene.add(Wall4);
+  scene.add(createWall(new THREE.Vector2(-500, 500), new THREE.Vector2(-500, -500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-500, -500), new THREE.Vector2(500, -500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(500, -500), new THREE.Vector2(500, 500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(500, 500), new THREE.Vector2(-500, 500), WallMaterial));
 
   const fbxLoader = new FBXLoader();
   fbxLoader.load(
@@ -302,20 +268,11 @@ export function init_1(last_room) {
       console.error('An error happened', error);
     }
   );
-  
-
-  // Add keyboard listeners
-  document.addEventListener('keydown', function(event) {
-    keyPressed[event.code] = true; 
-  });
-  document.addEventListener('keyup', function(event) {
-    keyPressed[event.code] = false; 
-  });
 
   PositionCopy = 0;
 }
 
-export function animate_1(current_room, last_room) {
+export function animate_1(current_room, last_room, keyPressed, face_item) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -327,7 +284,7 @@ export function animate_1(current_room, last_room) {
       camera.rotation.z = 0;
     }
   }
-  else if (shakeTimer == 0 && selecting == false){
+  else if (shakeTimer == 0){
     while (camera.rotation.y > Math.PI) {
       camera.rotation.y -= 2 * Math.PI;
     }
@@ -378,8 +335,7 @@ export function animate_1(current_room, last_room) {
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_book()){
-            selectElement.style.display = 'flex'; 
-            selecting = true;
+            face_item['book_shelf'] = true;
         }
         if (face_door()){
           current_room = 2;
@@ -404,16 +360,10 @@ export function animate_1(current_room, last_room) {
     else{
       SpaceUp = true;
     }
-  } else{
-    if (keyPressed['Space'] && readElement.style.display==='flex') {
-      selectElement.style.display = 'none'; 
-      readElement.style.display = 'none';
-      selecting = false;
-    }
-  }
+  } 
   updateCameraArrow();
   renderer.render(scene, camera);
-  return current_room;
+  return [current_room, face_item];
 }
 
 function face_book(){
