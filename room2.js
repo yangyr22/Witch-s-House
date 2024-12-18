@@ -3,25 +3,18 @@ import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader} from './three.js-dev/examples/jsm/loaders/DRACOLoader.js';
 import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
-import { createWall } from './utils.js';
+import { createWall, move } from './utils.js';
 
 let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
-let moveSpeed, clock;
+let clock;
 let mixers = [];
-let cat, cat_mixer, dist, cat_origin;
-let turnSpeed = 0.006;
-// let keyPressed = {}; 
+let cat, cat_mixer, dist, cat_animation;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
 let PositionCopy;
 let SpaceUp = true;
 
-
-// console.log(1);
-// init_1(1);
-// animate_1();
-// requestAnimationFrame(animate_1);
 
 export function init_2(last_room, room_lit) {
   // Create the scene ************************************************************************************************************************************************
@@ -44,26 +37,11 @@ export function init_2(last_room, room_lit) {
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+  cameraArrow = document.getElementById('cameraArrow');
 
   // Add lights to the scene
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
   scene.add(ambientLight);
-
-  // Event handling *************************************************************************************************************************************************
-  selectElement = document.getElementById('select1');
-  readElement = document.getElementById('Read');
-  yesButton = document.getElementById('yesButton');
-  noButton = document.getElementById('noButton');
-  cameraArrow = document.getElementById('cameraArrow');
-
-  yesButton.addEventListener('click', function() {
-      readElement.style.display = 'flex';
-      selectElement.style.display = 'none'; // Hide the text
-  });
-  noButton.addEventListener('click', function() {
-      selectElement.style.display = 'none';
-      selecting = false;
-  });
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
@@ -178,6 +156,7 @@ function load_items(room_lit){
       cat.position.set(100, -200, 450);
       cat.rotation.set(0, 0, 0);
       cat_mixer = new THREE.AnimationMixer(cat);
+      cat_animation = gltf.animations[0]
       cat_mixer.clipAction(gltf.animations[0]).play();
       scene.add(cat); 
     },
@@ -220,54 +199,10 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
       camera.rotation.z = 0;
     }
   }
-  else if (shakeTimer == 0 && selecting == false){
-    while (camera.rotation.y > Math.PI) {
-      camera.rotation.y -= 2 * Math.PI;
-    }
-    while (camera.rotation.y < -Math.PI) {
-      camera.rotation.y += 2 * Math.PI;
-    }
-    if (keyPressed['ShiftLeft']) {
-      moveSpeed = 2.4;
-    }else{
-      moveSpeed = 1.2;
-    }
+  else if (shakeTimer == 0){
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
-    const forward = new THREE.Vector3();
-    const right = new THREE.Vector3();
-    const up = new THREE.Vector3(0, 1, 0);
-    camera.getWorldDirection(forward);
-    forward.normalize();
-    right.crossVectors(forward, up).normalize();
-  
-    // Update camera position based on moveDirection
-    if (keyPressed['KeyW']) {
-      camera.position.add(forward.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyS']) {
-      camera.position.sub(forward.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyA']) {
-      camera.position.sub(right.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyD']) {
-      camera.position.add(right.multiplyScalar(moveSpeed));
-    }
-  
-    // Update menObject rotation based on rotation
-    if (keyPressed['ArrowLeft']) {
-      camera.rotation.y += turnSpeed;
-    }
-    if (keyPressed['ArrowRight']) {
-      camera.rotation.y -= turnSpeed;
-    }
-    if (keyPressed['ArrowUp']) {
-      camera.position.y += moveSpeed;
-    }
-    if (keyPressed['ArrowDown']) {
-      camera.position.y -= moveSpeed;
-    }
+    camera = move(camera, keyPressed);
     dist = new THREE.Vector2(camera.position.x - 100, camera.position.z - 450)
     cat.rotation.y = dist.angle() * (-1) + Math.PI / 2;
     if (keyPressed['Space']){
@@ -298,12 +233,6 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
     else{
       SpaceUp = true;
     }
-  } else{
-    if (keyPressed['Space'] && readElement.style.display==='flex') {
-      selectElement.style.display = 'none'; 
-      readElement.style.display = 'none';
-      selecting = false;
-    }
   }
   updateCameraArrow();
   //动画
@@ -314,18 +243,12 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
   if (dist.length() <= 300){
     cat_mixer.update(time);
   }
+  else{
+    cat_mixer.stopAllAction(); 
+    cat_mixer.clipAction(cat_animation).play();
+  }
   renderer.render(scene, camera);
   return [current_room, face_item];
-}
-
-function face_book(){
-    if (camera.position.x >= -200 || camera.position.z >= -200){
-        return false;
-    }
-    if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= -Math.PI / 4){
-        return false;
-    }
-    return true;
 }
 
 function face_door(){
@@ -339,12 +262,13 @@ function face_door(){
 }
 
 function cannot_go(x, z){
-    // if (Math.abs(x) > 400 || Math.abs(z) > 400){
-    //     return true;
-    // }
-    // if (Math.abs(x) <250 && Math.abs(z) < 200){
-    //     return true;
-    // }
+    console.log(x, z);
+    if (Math.abs(x) > 200 || Math.abs(z) > 700){
+      if(z > 145 && z < 595 && Math.abs(x) < 500){
+        return false;
+      }
+      return true;
+    }
     return false;
 }
 

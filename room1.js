@@ -3,22 +3,14 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
-import { createWall } from './utils.js';
+import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
-let moveSpeed;
-let turnSpeed = 0.006;
+let scene, camera, renderer, selecting, cameraArrow;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
 let PositionCopy;
 let SpaceUp = true;
-
-
-// console.log(1);
-// init_1(1);
-// animate_1();
-// requestAnimationFrame(animate_1);
 
 export function init_1(last_room) {
   // Create the scene ************************************************************************************************************************************************
@@ -286,53 +278,9 @@ export function animate_1(current_room, last_room, keyPressed, face_item) {
     }
   }
   else if (shakeTimer == 0){
-    while (camera.rotation.y > Math.PI) {
-      camera.rotation.y -= 2 * Math.PI;
-    }
-    while (camera.rotation.y < -Math.PI) {
-      camera.rotation.y += 2 * Math.PI;
-    }
-    if (keyPressed['ShiftLeft']) {
-      moveSpeed = 2.4;
-    }else{
-      moveSpeed = 1.2;
-    }
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
-    const forward = new THREE.Vector3();
-    const right = new THREE.Vector3();
-    const up = new THREE.Vector3(0, 1, 0);
-    camera.getWorldDirection(forward);
-    forward.normalize();
-    right.crossVectors(forward, up).normalize();
-  
-    // Update camera position based on moveDirection
-    if (keyPressed['KeyW']) {
-      camera.position.add(forward.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyS']) {
-      camera.position.sub(forward.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyA']) {
-      camera.position.sub(right.multiplyScalar(moveSpeed));
-    }
-    if (keyPressed['KeyD']) {
-      camera.position.add(right.multiplyScalar(moveSpeed));
-    }
-  
-    // Update menObject rotation based on rotation
-    if (keyPressed['ArrowLeft']) {
-      camera.rotation.y += turnSpeed;
-    }
-    if (keyPressed['ArrowRight']) {
-      camera.rotation.y -= turnSpeed;
-    }
-    // if (keyPressed['ArrowUp']) {
-    //   camera.position.y += moveSpeed;
-    // }
-    // if (keyPressed['ArrowDown']) {
-    //   camera.position.y -= moveSpeed;
-    // }    
+    camera = move(camera, keyPressed);    
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_book()){
