@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
+import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall } from './utils.js';
 
 let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
@@ -92,6 +93,13 @@ export function init_1(last_room) {
   scene.add(createWall(new THREE.Vector2(500, -500), new THREE.Vector2(500, 500), WallMaterial));
   scene.add(createWall(new THREE.Vector2(500, 500), new THREE.Vector2(-500, 500), WallMaterial));
 
+  load_items();
+
+  PositionCopy = 0;
+}
+
+function load_items(){
+  //书柜
   const fbxLoader = new FBXLoader();
   fbxLoader.load(
     'room1/78824/78824.fbx', // 替换为你的FBX文件路径
@@ -117,45 +125,40 @@ export function init_1(last_room) {
       console.error('An error happened', error);
     }
   );
-
-  const mtlLoader = new MTLLoader();
-  mtlLoader.load(
-    'room1/piano/Piano.obj.mtl',
-    function (materialCreator) {
-      materialCreator.preload(); 
-      const objLoader = new OBJLoader();
-      objLoader.setMaterials(materialCreator);
-      objLoader.load(
-        'room1/piano/Piano.obj',
-        function (object) {
-          object.scale.set(5, 5, 5);
-          object.rotation.x = -Math.PI / 2;
-        //   object.rotation.z = -Math.PI;
-          object.position.y = -200;
-          object.traverse(function (child) {
-            if (child.isMesh) {
-              child.castShadow = true; 
-              child.receiveShadow = true; 
-            }
-          });
-          scene.add(object);
-        },
-        function (xhr) {
-          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function (error) {
-          console.error('An error happened', error);
+  const loader = new GLTFLoader();
+  loader.load(
+    'room1/grand_piano.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
         }
-      );
+      });
+      gltf.scene.scale.set(125, 125, 75);
+      gltf.scene.position.set(-50, -200, 0);
+      gltf.scene.rotation.set(0, Math.PI, 0);
+      scene.add(gltf.scene); 
     },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    function (error) {
-      console.error('An error happened', error);
-    }
   );
 
+  loader.load(
+    'room1/rose_3d_scanned.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(125, 125, 125);
+      gltf.scene.position.set(150, -200, 0);
+      gltf.scene.rotation.set(0, Math.PI, 0);
+      scene.add(gltf.scene); 
+    },
+  );
+  
+  const mtlLoader = new MTLLoader();
   mtlLoader.load(
     'room1/door1/models/8.mtl',
     function (materialCreator) {
@@ -268,8 +271,6 @@ export function init_1(last_room) {
       console.error('An error happened', error);
     }
   );
-
-  PositionCopy = 0;
 }
 
 export function animate_1(current_room, last_room, keyPressed, face_item) {

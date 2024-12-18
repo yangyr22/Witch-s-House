@@ -1,11 +1,14 @@
 import * as THREE from 'three';
+import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader} from './three.js-dev/examples/jsm/loaders/DRACOLoader.js';
 import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
-import { FBXLoader} from './three.js-dev/examples/jsm/loaders/FBXLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { createWall } from './utils.js';
 
 let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
-let moveSpeed;
+let moveSpeed, clock;
+let mixers = [];
+let cat, cat_mixer, dist, cat_origin;
 let turnSpeed = 0.006;
 // let keyPressed = {}; 
 let shakeAmount = 0.05;
@@ -20,20 +23,20 @@ let SpaceUp = true;
 // animate_1();
 // requestAnimationFrame(animate_1);
 
-export function init_2(last_room) {
+export function init_2(last_room, room_lit) {
   // Create the scene ************************************************************************************************************************************************
   selecting = false;
   scene = new THREE.Scene();
-
+  clock = new THREE.Clock()
   // Create the camera
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
 //   camera.position.set(0, 600, 0); // 初始相机位置
 //   camera.rotation.x += -Math.PI / 2;
   if (last_room === 0){
-    camera.position.set(0, 0, 650); // 初始相机位置
+    camera.position.set(0, 0, 700); // 初始相机位置
   }
   else if (last_room === 1){
-    camera.position.set(0, 0, -650); // 初始相机位置
+    camera.position.set(0, 0, -700); // 初始相机位置
     camera.rotation.y = Math.PI;
   }
 
@@ -43,14 +46,8 @@ export function init_2(last_room) {
   document.body.appendChild(renderer.domElement);
 
   // Add lights to the scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
   scene.add(ambientLight);
-  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
-  directionalLight1.position.set(0, 1000, 0);
-  scene.add(directionalLight1);
-  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight2.position.set(-1, 1, 1);
-  scene.add(directionalLight2);
 
   // Event handling *************************************************************************************************************************************************
   selectElement = document.getElementById('select1');
@@ -112,15 +109,103 @@ export function init_2(last_room) {
   scene.add(createWall(new THREE.Vector2(-225, 750), new THREE.Vector2(-375, 600), WallMaterial));
   scene.add(createWall(new THREE.Vector2(375, 600), new THREE.Vector2(225, 750), WallMaterial));
 
-//   // Add keyboard listeners
-//   document.addEventListener('keydown', function(event) {
-//     keyPressed[event.code] = true; 
-//   });
-//   document.addEventListener('keyup', function(event) {
-//     keyPressed[event.code] = false; 
-//   });
-
+  load_items(room_lit);
+  
   PositionCopy = 0;
+}
+
+function load_items(room_lit){
+  const loader = new GLTFLoader();
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath( 'three.js-dev/examples/jsm/libs/draco/' );
+  loader.setDRACOLoader( dracoLoader );
+  for (const key in room_lit){
+    if (room_lit[key] === true){
+      loader.load(
+        'room2/copper_candlestick.glb',
+        function ( gltf ) {
+          gltf.scene.traverse(function (node) {
+            if (node.isMesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+            }
+          });
+          gltf.scene.scale.set(500, 500, 500);
+          gltf.scene.position.set(360 * (key % 2) - 180, 0, -300 + 200 * Math.floor(key / 2));
+          gltf.scene.rotation.set(0, (key - 1 / 6) * Math.PI, 0);
+          const mixer = new THREE.AnimationMixer(gltf.scene);
+          mixer.clipAction(gltf.animations[0]).play();
+          mixers.push(mixer);
+          scene.add(gltf.scene); 
+        },
+      );
+      const pointLight = new THREE.PointLight(0xffffff, 300);
+      pointLight.position.set(360 * (key % 2) - 180, 120, -300 + 200 * Math.floor(key / 2));
+      scene.add(pointLight);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+      scene.add(ambientLight);
+    }
+    else{
+      loader.load(
+        'room2/scene.glb',
+        function ( gltf ) {
+          gltf.scene.traverse(function (node) {
+            if (node.isMesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+            }
+          });
+          gltf.scene.scale.set(500, 500, 500);
+          gltf.scene.position.set(360 * (key % 2) - 180, 0, -300 + 200 * Math.floor(key / 2));
+          gltf.scene.rotation.set(0, (key - 1 / 6) * Math.PI, 0);
+          scene.add(gltf.scene); 
+        },
+      );
+    }
+  }
+  //cat
+  loader.load(
+    'room2/black_cat.glb',
+    function ( gltf ) {
+      cat = gltf.scene;
+      cat.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      cat.scale.set(30, 30, 30);
+      cat.position.set(100, -200, 450);
+      cat.rotation.set(0, 0, 0);
+      cat_mixer = new THREE.AnimationMixer(cat);
+      cat_mixer.clipAction(gltf.animations[0]).play();
+      scene.add(cat); 
+    },
+  );
+  const mtlLoader = new MTLLoader();
+  mtlLoader.load(
+    'room2/Toy_Soldier/11584_Toy Soldier_V2_l3.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'room2/Toy_Soldier/11584_Toy Soldier_V2_l3.obj',
+        function (object) {
+          object.scale.set(24, 24, 24);
+          object.rotation.x = -Math.PI / 2;
+          object.position.set(100, -200, -650);
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+      );
+    },
+  ); 
 }
 
 export function animate_2(current_room, last_room, keyPressed, face_item) {
@@ -182,7 +267,9 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
     }
     if (keyPressed['ArrowDown']) {
       camera.position.y -= moveSpeed;
-    }    
+    }
+    dist = new THREE.Vector2(camera.position.x - 100, camera.position.z - 450)
+    cat.rotation.y = dist.angle() * (-1) + Math.PI / 2;
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_book()){
@@ -219,6 +306,14 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
     }
   }
   updateCameraArrow();
+  //动画
+  const time = clock.getDelta();
+  for (const key in mixers){
+    mixers[key].update(time);
+  }
+  if (dist.length() <= 300){
+    cat_mixer.update(time);
+  }
   renderer.render(scene, camera);
   return [current_room, face_item];
 }

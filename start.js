@@ -1,7 +1,7 @@
 import { init_1, animate_1 } from './room1.js';
 import { init_2, animate_2 } from './room2.js';
 
-var current_room = 1;
+var current_room = 2;
 var last_room = 0;
 var temp = 0;
 var mid = 0;
@@ -34,6 +34,12 @@ let face_item = {
 let item_content = {
     'book_shelf' : selectElement,
 };
+let room_lit = {
+    0 : true,
+    1 : true,
+    2 : true,
+    3 : true,
+};
 let all_select = {selectElement, readElement};
 
 // Add keyboard listeners
@@ -52,7 +58,7 @@ function animationLoop() {
             if (current_room === 1) {
                 init_1(last_room);
             } else if (current_room === 2) {
-                init_2(last_room);
+                init_2(last_room, room_lit);
             }
             temp = current_room
         }
