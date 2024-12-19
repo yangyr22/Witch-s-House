@@ -5,7 +5,7 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, selectElement, selecting, readElement, yesButton, noButton, cameraArrow;
+let scene, camera, renderer, cameraArrow;
 let clock;
 let mixers = [];
 let cat, cat_mixer, dist, cat_animation;
@@ -18,13 +18,12 @@ let SpaceUp = true;
 
 export function init_2(last_room, room_lit) {
   // Create the scene ************************************************************************************************************************************************
-  selecting = false;
   scene = new THREE.Scene();
   clock = new THREE.Clock()
   // Create the camera
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
 //   camera.position.set(0, 600, 0); // 初始相机位置
-//   camera.rotation.x += -Math.PI / 2;
+  // camera.rotation.y += -Math.PI;
   if (last_room === 0){
     camera.position.set(0, 0, 700); // 初始相机位置
   }
@@ -53,6 +52,15 @@ export function init_2(last_room, room_lit) {
     roughness: 1.0, // 设置粗糙度
   });
 
+  const carpetTexture = textureLoader.load('global/carpet.jpg'); // 替换为你的纹理图片路径
+
+  const carpetMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    map: carpetTexture, // 应用纹理
+    metalness: 0.5, // 设置金属度
+    roughness: 1.0, // 设置粗糙度
+  });
+
   const WallTexture = textureLoader.load('global/wall.jpg');
 
   const WallMaterial = new THREE.MeshStandardMaterial({
@@ -71,6 +79,19 @@ export function init_2(last_room, room_lit) {
   ground2.rotation.x = Math.PI / 2; 
   ground2.position.y = 800;
   scene.add(ground2);
+
+  const carpetGeometry = new THREE.PlaneGeometry(150, 250);
+  const carpet1 = new THREE.Mesh(carpetGeometry, carpetMaterial);
+  carpet1.rotation.x = -Math.PI / 2; 
+//   carpet.rotation.z = Math.PI / 2;
+  carpet1.position.set(-450 ,-199, 475);
+  scene.add(carpet1);
+
+  const carpet2 = new THREE.Mesh(carpetGeometry, carpetMaterial);
+  carpet2.rotation.x = -Math.PI / 2; 
+//   carpet.rotation.z = Math.PI / 2;
+  carpet2.position.set(450 ,-199, 475);
+  scene.add(carpet2);
 
   scene.add(createWall(new THREE.Vector2(-525, 600), new THREE.Vector2(-525, 150), WallMaterial));
   scene.add(createWall(new THREE.Vector2(525, 150), new THREE.Vector2(525, 600), WallMaterial));
@@ -185,6 +206,108 @@ function load_items(room_lit){
       );
     },
   ); 
+  mtlLoader.load(
+    'global/door1/models/8.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'global/door1/models/8.obj',
+        function (object) {
+          object.scale.set(6, 6, 6);
+          object.position.z = -630;
+          object.position.x = 80;
+          object.position.y = 145;
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+      );
+    },
+  );
+  mtlLoader.load(
+    'global/door1/models/8.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'global/door1/models/8.obj',
+        function (object) {
+          object.scale.set(6, 6, 6);
+          object.position.z = 850;
+          object.position.x = 80;
+          object.position.y = 145;
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+      );
+    },
+  );
+  mtlLoader.load(
+    'global/door1/models/8.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'global/door1/models/8.obj',
+        function (object) {
+          object.scale.set(6, 6, 6);
+          // object.rotation.x = -Math.PI;
+          // object.rotation.z = -Math.PI;
+          object.rotation.y = -Math.PI / 2;
+          object.position.z = 550;
+          object.position.x = 405;
+          object.position.y = 145;
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+      );
+    },
+  );
+  mtlLoader.load(
+    'global/door1/models/8.mtl',
+    function (materialCreator) {
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
+        'global/door1/models/8.obj',
+        function (object) {
+          object.scale.set(6, 6, 6);
+          // object.rotation.x = -Math.PI;
+          // object.rotation.z = -Math.PI;
+          object.rotation.y = -Math.PI / 2;
+          object.position.z = 550;
+          object.position.x = -615;
+          object.position.y = 145;
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.castShadow = true; 
+              child.receiveShadow = true; 
+            }
+          });
+          scene.add(object);
+        },
+      );
+    },
+  );
 }
 
 export function animate_2(current_room, last_room, keyPressed, face_item) {
@@ -262,7 +385,6 @@ function face_door(){
 }
 
 function cannot_go(x, z){
-    console.log(x, z);
     if (Math.abs(x) > 200 || Math.abs(z) > 700){
       if(z > 145 && z < 595 && Math.abs(x) < 500){
         return false;

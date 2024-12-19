@@ -152,13 +152,13 @@ function load_items(){
   
   const mtlLoader = new MTLLoader();
   mtlLoader.load(
-    'room1/door1/models/8.mtl',
+    'global/door1/models/8.mtl',
     function (materialCreator) {
       materialCreator.preload(); 
       const objLoader = new OBJLoader();
       objLoader.setMaterials(materialCreator);
       objLoader.load(
-        'room1/door1/models/8.obj',
+        'global/door1/models/8.obj',
         function (object) {
           object.scale.set(8, 8, 8);
           // object.rotation.x = -Math.PI;
