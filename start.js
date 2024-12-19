@@ -1,9 +1,10 @@
 import { init_1, animate_1 } from './room1.js';
 import { init_2, animate_2 } from './room2.js';
 import { init_3, animate_3 } from './room3.js';
+import { init_4, animate_4 } from './room4.js';
 
-var current_room = 3;
-var last_room = 2;
+var current_room = 4;
+var last_room = 0;
 var temp = 0;
 var mid = 0;
 let keyPressed = {};
@@ -62,6 +63,8 @@ function animationLoop() {
                 init_2(last_room, room_lit);
             } else if (current_room === 3) {
                 init_3(last_room);
+            } else if (current_room === 4) {
+                init_4(last_room);
             }
             temp = current_room
         }
@@ -77,6 +80,10 @@ function animationLoop() {
             face_item = info2;
         } else if (current_room === 3) {
             const [info1, info2] = animate_3(current_room, last_room, keyPressed, face_item);
+            mid = info1;
+            face_item = info2;
+        } else if (current_room === 4) {
+            const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item);
             mid = info1;
             face_item = info2;
         }

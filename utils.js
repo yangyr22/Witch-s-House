@@ -29,8 +29,6 @@ export function move(camera, keyPressed){
     }else{
         moveSpeed = 1.2;
     }
-    const x_copy = camera.position.x;
-    const z_copy = camera.position.z;
     const forward = new THREE.Vector3();
     const right = new THREE.Vector3();
     const up = new THREE.Vector3(0, 1, 0);

@@ -31,6 +31,14 @@ export function init_2(last_room, room_lit) {
     camera.position.set(0, 0, -700); // 初始相机位置
     camera.rotation.y = Math.PI;
   }
+  else if (last_room === 3){
+    camera.position.set(450, 0, 500); // 初始相机位置
+    camera.rotation.y = Math.PI / 2;
+  }
+  else if (last_room === 5){
+    camera.position.set(-450, 0, 500); // 初始相机位置
+    camera.rotation.y = - Math.PI / 2;
+  }
 
   // Create the renderer and add it to the DOM
   renderer = new THREE.WebGLRenderer();
@@ -330,11 +338,14 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
     cat.rotation.y = dist.angle() * (-1) + Math.PI / 2;
     if (keyPressed['Space']){
       if (SpaceUp === true) {
-        if (face_book()){
-            face_item['book_shelf'] = true;
+        if (face_door_1()){
+          current_room = 1;
         }
-        if (face_door()){
-          current_room = 2;
+        if (face_door_2()){
+          current_room = 3;
+        }
+        if (face_door_3()){
+          current_room = 5;
         }
       }
     }
@@ -374,11 +385,31 @@ export function animate_2(current_room, last_room, keyPressed, face_item) {
   return [current_room, face_item];
 }
 
-function face_door(){
-  if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
+function face_door_1(){
+  if (camera.position.z >= -600){
       return false;
   }
-  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
+  if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= - Math.PI / 4){
+      return false;
+  }
+  return true;
+}
+
+function face_door_2(){
+  if (camera.position.x <= 450 && camera.position.z <= 350){
+      return false;
+  }
+  if (camera.rotation.y <= - 3 * Math.PI / 4 || camera.rotation.y >= - Math.PI / 4){
+      return false;
+  }
+  return true;
+}
+
+function face_door_3(){
+  if (camera.position.x >= -450 && camera.position.z <= 350){
+      return false;
+  }
+  if (camera.rotation.y >= 3 * Math.PI / 4 || camera.rotation.y <= Math.PI / 4){
       return false;
   }
   return true;
@@ -386,7 +417,7 @@ function face_door(){
 
 function cannot_go(x, z){
     if (Math.abs(x) > 200 || Math.abs(z) > 700){
-      if(z > 145 && z < 595 && Math.abs(x) < 500){
+      if(z >= 180 && z <= 570 && Math.abs(x) <= 475){
         return false;
       }
       return true;

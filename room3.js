@@ -27,6 +27,10 @@ export function init_3(last_room) {
     camera.position.set(-550, 0, 0); // 初始相机位置
     camera.rotation.y = - Math.PI / 2;
   }
+  if (last_room === 4){
+    camera.position.set(0, 0, -400); // 初始相机位置
+    camera.rotation.y = Math.PI;
+  }
 
   // Create the renderer and add it to the DOM
   renderer = new THREE.WebGLRenderer();
@@ -35,9 +39,9 @@ export function init_3(last_room) {
   cameraArrow = document.getElementById('cameraArrow');
 
   // Add lights to the scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
-  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.4);
+  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
   directionalLight1.position.set(0, 500, 0);
   scene.add(directionalLight1);
   const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -254,10 +258,7 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
     camera = move(camera, keyPressed);
     if (keyPressed['Space']){
       if (SpaceUp === true) {
-        if (face_book()){
-            face_item['book_shelf'] = true;
-        }
-        if (face_door()){
+        if (face_door_1()){
           current_room = 2;
         }
       }
@@ -291,15 +292,15 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
   return [current_room, face_item];
 }
 
-function face_door(){
-  if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
-      return false;
+function face_door_1(){
+    if (camera.position.x >= -500 && Math.abs(camera.position.z) >= 100){
+        return false;
+    }
+    if (camera.rotation.y >= 3 * Math.PI / 4 || camera.rotation.y <= Math.PI / 4){
+        return false;
+    }
+    return true;
   }
-  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
-      return false;
-  }
-  return true;
-}
 
 function cannot_go(x, z){
     console.log(x, z);

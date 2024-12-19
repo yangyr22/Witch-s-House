@@ -5,7 +5,7 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, selecting, cameraArrow;
+let scene, camera, renderer, cameraArrow;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
@@ -14,7 +14,6 @@ let SpaceUp = true;
 
 export function init_1(last_room) {
   // Create the scene ************************************************************************************************************************************************
-  selecting = false;
   scene = new THREE.Scene();
 
   // Create the camera
@@ -110,12 +109,6 @@ function load_items(){
         }
       });
     },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    function (error) {
-      console.error('An error happened', error);
-    }
   );
   const loader = new GLTFLoader();
   loader.load(
@@ -174,20 +167,8 @@ function load_items(){
             }
           });
           scene.add(object);
-        },
-        function (xhr) {
-          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function (error) {
-          console.error('An error happened', error);
         }
       );
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    function (error) {
-      console.error('An error happened', error);
     }
   );
 
@@ -215,12 +196,6 @@ function load_items(){
             });
             scene.add(object);
             console.log(object.position.z + 'loaded');
-          },
-          function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-          },
-          function (error) {
-            console.error('An error happened', error);
           }
         );
       }
@@ -245,22 +220,9 @@ function load_items(){
             });
             scene.add(object);
             console.log(object.position.z + 'loaded');
-          },
-          function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-          },
-          function (error) {
-            console.error('An error happened', error);
           }
         );
-        
       }
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    function (error) {
-      console.error('An error happened', error);
     }
   );
 }
