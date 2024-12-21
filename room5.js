@@ -8,20 +8,19 @@ import { createWall, move } from './utils.js';
 let scene, camera, renderer, cameraArrow;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
-let chair, chair_locked, cam_locked;
 let shaked = false;
 let PositionCopy;
 let SpaceUp = true;
 
-export function init_4(last_room) {
+export function init_1(last_room) {
   // Create the scene ************************************************************************************************************************************************
   scene = new THREE.Scene();
 
   // Create the camera
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
 //   camera.position.set(0, 600, 0); // 初始相机位置
-  // camera.rotation.y += -Math.PI;
-  camera.position.set(0, 0, 300); // 初始相机位置
+//   camera.rotation.x += -Math.PI / 2;
+  camera.position.set(0, 0, 400); // 初始相机位置
 
   // Create the renderer and add it to the DOM
   renderer = new THREE.WebGLRenderer();
@@ -67,35 +66,53 @@ export function init_4(last_room) {
     roughness: 0.5, // 设置粗糙度
   });
 
-  const groundGeometry = new THREE.PlaneGeometry(700, 700);
+  const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
   const ground1 = new THREE.Mesh(groundGeometry, groundMaterial);
   ground1.rotation.x = -Math.PI / 2; 
   ground1.position.y = -200;
   scene.add(ground1);
 
-  const carpetGeometry = new THREE.PlaneGeometry(200, 200);
+  const carpetGeometry = new THREE.PlaneGeometry(600, 350);
   const carpet = new THREE.Mesh(carpetGeometry, carpetMaterial);
   carpet.rotation.x = -Math.PI / 2; 
 //   carpet.rotation.z = Math.PI / 2;
   carpet.position.y = -199;
   scene.add(carpet);
 
-  scene.add(createWall(new THREE.Vector2(-350, 350), new THREE.Vector2(-350, -350), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-350, -350), new THREE.Vector2(350, -350), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(350, -350), new THREE.Vector2(350, 350), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(350, 350), new THREE.Vector2(-350, 350), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-500, 500), new THREE.Vector2(-500, -500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-500, -500), new THREE.Vector2(500, -500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(500, -500), new THREE.Vector2(500, 500), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(500, 500), new THREE.Vector2(-500, 500), WallMaterial));
 
   load_items();
 
   PositionCopy = 0;
-  chair_locked = false;
-  cam_locked = false;
 }
 
 function load_items(){
+  //书柜
+  const fbxLoader = new FBXLoader();
+  fbxLoader.load(
+    'room1/78824/78824.fbx', // 替换为你的FBX文件路径
+    function (object) {
+      object.scale.set(5, 5, 5);
+      object.rotation.x = -Math.PI / 2;
+    //   object.rotation.z = Math.PI / 2;
+      object.position.x = -300;
+      object.position.y = -200;
+      object.position.z = -480;
+      scene.add(object);
+      object.traverse(function (child) {
+        if (child.isMesh) {
+          child.material.metalness = 0.5; // 金属度，范围0-1
+          child.material.shininess = 50; // 光泽度，范围0-100
+        }
+      });
+    },
+  );
   const loader = new GLTFLoader();
   loader.load(
-    'room4/clock.glb',
+    'room1/grand_piano.glb',
     function ( gltf ) {
       gltf.scene.traverse(function (node) {
         if (node.isMesh) {
@@ -103,66 +120,114 @@ function load_items(){
           node.receiveShadow = true;
         }
       });
-      gltf.scene.scale.set(30, 30, 30);
-      gltf.scene.position.set(0, -40, 0);
+      gltf.scene.scale.set(125, 125, 75);
+      gltf.scene.position.set(-50, -200, 0);
+      gltf.scene.rotation.set(0, Math.PI, 0);
       scene.add(gltf.scene); 
     },
   );
+
+  loader.load(
+    'room1/rose_3d_scanned.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(125, 125, 125);
+      gltf.scene.position.set(150, -200, 0);
+      gltf.scene.rotation.set(0, Math.PI, 0);
+      scene.add(gltf.scene); 
+    },
+  );
+  
   const mtlLoader = new MTLLoader();
   mtlLoader.load(
     'global/door1/models/8.mtl',
     function (materialCreator) {
-    materialCreator.preload(); 
-    const objLoader = new OBJLoader();
-    objLoader.setMaterials(materialCreator);
-    objLoader.load(
+      materialCreator.preload(); 
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materialCreator);
+      objLoader.load(
         'global/door1/models/8.obj',
         function (object) {
-        object.scale.set(6, 6, 6);
-        object.position.z = 445;
-        object.position.x = 70;
-        object.position.y = 145;
-        object.traverse(function (child) {
+          object.scale.set(8, 8, 8);
+          // object.rotation.x = -Math.PI;
+          // object.rotation.z = -Math.PI;
+          // object.rotation.x = -Math.PI;
+          object.position.z = 630;
+          object.position.x = 250;
+          object.position.y = 250;
+          object.traverse(function (child) {
             if (child.isMesh) {
-            child.castShadow = true; 
-            child.receiveShadow = true; 
+              child.castShadow = true; 
+              child.receiveShadow = true; 
             }
-        });
-        scene.add(object);
-        },
-    );
-    },
+          });
+          scene.add(object);
+        }
+      );
+    }
   );
+
   mtlLoader.load(
     'room1/chair/Straight_Leg_Chair_Honey_V1.mtl',
     function (materialCreator) {
+      for (let i = 0; i < 4; i++) {
         materialCreator.preload(); // Preload materials
         const objLoader = new OBJLoader();
         objLoader.setMaterials(materialCreator);
         objLoader.load(
           'room1/chair/Straight_Leg_Chair_Honey_V1.obj',
           function (object) {
-            object.scale.set(1.5, 1.5, 1.5);
+            object.scale.set(2, 2, 2);
             object.rotation.x = -Math.PI / 2;
             object.rotation.z = -Math.PI / 2;
-            object.position.x = 200;
+            object.position.x = 400;
             object.position.y = -110;
-            object.position.z = 0;
+            object.position.z = 300 - i * 200;
             object.traverse(function (child) {
               if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
               }
             });
-            chair = object;
-            scene.add(chair);
-          },
+            scene.add(object);
+            console.log(object.position.z + 'loaded');
+          }
         );
       }
+      for (let i = 0; i < 4; i++) {
+        materialCreator.preload(); // Preload materials
+        const objLoader = new OBJLoader();
+        objLoader.setMaterials(materialCreator);
+        objLoader.load(
+          'room1/chair/Straight_Leg_Chair_Honey_V1.obj',
+          function (object) {
+            object.scale.set(2, 2, 2);
+            object.rotation.x = -Math.PI / 2;
+            object.rotation.z = Math.PI / 2;
+            object.position.x = -400;
+            object.position.y = -110;
+            object.position.z = 300 - i * 200;
+            object.traverse(function (child) {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              }
+            });
+            scene.add(object);
+            console.log(object.position.z + 'loaded');
+          }
+        );
+      }
+    }
   );
 }
 
-export function animate_4(current_room, last_room, keyPressed, face_item) {
+export function animate_1(current_room, last_room, keyPressed, face_item) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -177,26 +242,14 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
   else if (shakeTimer == 0){
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
-    camera = move(camera, keyPressed); 
-    if (cam_locked === true){
-        camera.position.x = x_copy;
-        camera.position.z = z_copy;
-    }   
+    camera = move(camera, keyPressed);    
     if (keyPressed['Space']){
       if (SpaceUp === true) {
+        if (face_book()){
+            face_item['book_shelf'] = true;
+        }
         if (face_door()){
-          current_room = 3;
-        }
-        if (face_chair() && chair_locked === false){
-          face_item['clock'] = true;
-        }
-        if (face_chair() && chair_locked && cam_locked === false){
-          camera.position.set(0, 100, 100);
-          cam_locked = true;
-        }
-        else if (cam_locked === true){
-          camera.position.set(0, 0, 160);
-          cam_locked = false;
+          current_room = 2;
         }
       }
     }
@@ -212,17 +265,6 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
     else{
       shaked = false;
     }
-    if (chair_locked === false){
-      const cam_move = new THREE.Vector2(camera.position.x - x_copy, camera.position.z - z_copy);
-      const to_chair = new THREE.Vector2(chair.position.x - camera.position.x, chair.position.z - camera.position.z);
-      if (to_chair.length() <= 50 && cam_move.angleTo(to_chair) <= Math.PI / 4){
-        chair.position.x += camera.position.x - x_copy;
-        chair.position.z += camera.position.z - z_copy;
-      }
-      if (Math.abs(chair.position.x) <= 10 && chair.position.z >= 100 && chair.position.z <= 140){
-        chair_locked = true;
-      }
-    }
     if ('Space' in keyPressed && keyPressed['Space'] === true){
       SpaceUp = false;
     }
@@ -235,19 +277,18 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
   return [current_room, face_item];
 }
 
-function face_chair(){
-  console.log(camera.position, camera.rotation);
-  if (camera.position.z <= 100 || camera.position.z >= 200 || Math.abs(camera.position.x) >= 50 ){
-      return false;
-  }
-  if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= -Math.PI / 4){
-      return false;
-  }
-  return true;
+function face_book(){
+    if (camera.position.x >= -200 || camera.position.z >= -200){
+        return false;
+    }
+    if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= -Math.PI / 4){
+        return false;
+    }
+    return true;
 }
 
 function face_door(){
-  if (camera.position.z <= 250 || Math.abs(camera.position.x) >= 100 ){
+  if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
       return false;
   }
   if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
@@ -257,10 +298,10 @@ function face_door(){
 }
 
 function cannot_go(x, z){
-    if (Math.abs(x) > 300 || Math.abs(z) > 300){
+    if (Math.abs(x) > 400 || Math.abs(z) > 400){
         return true;
     }
-    if (Math.abs(x) < 100 && Math.abs(z) < 100){
+    if (Math.abs(x) <250 && Math.abs(z) < 200){
         return true;
     }
     return false;
