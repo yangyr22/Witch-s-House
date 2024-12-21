@@ -20,7 +20,7 @@ export function init_1(last_room) {
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
 //   camera.position.set(0, 600, 0); // 初始相机位置
 //   camera.rotation.x += -Math.PI / 2;
-  camera.position.set(0, 0, 400); // 初始相机位置
+  camera.position.set(200, 0, 400); // 初始相机位置
 
   // Create the renderer and add it to the DOM
   renderer = new THREE.WebGLRenderer();

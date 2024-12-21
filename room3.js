@@ -261,6 +261,9 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
         if (face_door_1()){
           current_room = 2;
         }
+        if (face_door_2()){
+          current_room = 4;
+        }
       }
     }
     if (cannot_go(camera.position.x, camera.position.z)){
@@ -302,8 +305,18 @@ function face_door_1(){
     return true;
   }
 
+
+function face_door_2(){
+    if (camera.position.z >= -350 && Math.abs(camera.position.x - 150) >= 100){
+        return false;
+    }
+    if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= - Math.PI / 4){
+        return false;
+    }
+    return true;
+}
+
 function cannot_go(x, z){
-    console.log(x, z);
     if (Math.abs(x) > 550 || Math.abs(z) > 400){
       return true;
     }

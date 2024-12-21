@@ -2,8 +2,9 @@ import { init_1, animate_1 } from './room1.js';
 import { init_2, animate_2 } from './room2.js';
 import { init_3, animate_3 } from './room3.js';
 import { init_4, animate_4 } from './room4.js';
+import { init_5, animate_5 } from './room5.js';
 
-var current_room = 4;
+var current_room = 2;
 var last_room = 0;
 var temp = 0;
 var mid = 0;
@@ -55,7 +56,7 @@ document.addEventListener('keyup', function(event) {
 function animationLoop() {
     requestAnimationFrame(animationLoop);
     if (selecting === false){
-        //init
+        console.log(current_room, last_room)
         if (current_room != temp){
             if (current_room === 1) {
                 init_1(last_room);
@@ -65,6 +66,8 @@ function animationLoop() {
                 init_3(last_room);
             } else if (current_room === 4) {
                 init_4(last_room);
+            } else if (current_room === 5) {
+                init_5(last_room);
             }
             temp = current_room
         }
@@ -84,6 +87,10 @@ function animationLoop() {
             face_item = info2;
         } else if (current_room === 4) {
             const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item);
+            mid = info1;
+            face_item = info2;
+        } else if (current_room === 5) {
+            const [info1, info2] = animate_5(current_room, last_room, keyPressed, face_item);
             mid = info1;
             face_item = info2;
         }
