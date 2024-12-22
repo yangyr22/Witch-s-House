@@ -225,7 +225,7 @@ export function animate_6(current_room, last_room, keyPressed, face_item) {
             play = true;
         }
         if (face_door()){
-          current_room = 2;
+          current_room = 5;
         }
       }
     }
@@ -274,10 +274,10 @@ function face_clown(){
 }
 
 function face_door(){
-  if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
+  if (camera.position.x <= 100 || camera.position.z <= 50){
       return false;
   }
-  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
+  if (camera.rotation.y <= - Math.PI / 4 * 3 || camera.rotation.y >= - Math.PI / 4){
       return false;
   }
   return true;

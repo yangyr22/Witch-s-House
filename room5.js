@@ -114,8 +114,6 @@ function load_items(){
         if (node.isMesh) {
           node.castShadow = true;
           node.receiveShadow = true;
-          node.material.emissive = node.material.color; 
-          node.material.emissiveMap = node.material.map; 
         }
       });
       gltf.scene.scale.set(250, 170, 200);
