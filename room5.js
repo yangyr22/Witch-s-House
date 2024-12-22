@@ -124,6 +124,50 @@ function load_items(){
     },
   );
   loader.load(
+    'room5/gift_box.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(300, 300, 300);
+      gltf.scene.position.set(-350, -100, -150);
+      scene.add(gltf.scene); 
+    },
+  );
+  loader.load(
+    'room5/cup_and_plate.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(3000, 3000, 3000);
+      gltf.scene.rotation.set(0, - Math.PI / 2, 0);
+      gltf.scene.position.set(10, -70, -130);
+      scene.add(gltf.scene); 
+    },
+  );
+  loader.load(
+    'room5/cup_and_plate.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(3000, 3000, 3000);
+      gltf.scene.rotation.set(0, Math.PI / 2, 0);
+      gltf.scene.position.set(90, -70, -130);
+      scene.add(gltf.scene); 
+    },
+  );
+  loader.load(
     'room5/window_and_curtains.glb',
     function ( gltf ) {
       gltf.scene.traverse(function (node) {
