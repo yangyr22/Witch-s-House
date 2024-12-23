@@ -106,6 +106,7 @@ export function init_5(last_room) {
   load_items();
 
   PositionCopy = 0;
+  Minimap.style.width = '340px'
   Minimap.style.backgroundImage =  "url('minimap/room5.png')";
 }
 
@@ -456,6 +457,9 @@ export function animate_5(current_room, last_room, keyPressed, face_item, messag
         if (face_door_2()){
           current_room = 6;
         }
+        if (face_music() && items['queen'] === true){
+          face_item['musicbox'] = true;
+        }
       }
     }
     if (cannot_go(camera.position.x, camera.position.z)){
@@ -502,6 +506,16 @@ function face_door_2(){
     return true;
 }
 
+function face_music(){
+  if (Math.abs(camera.position.x+350) >= 100 || camera.position.z >= -200){
+      return false;
+  }
+  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
+      return false;
+  }
+  return true;
+}
+
 function cannot_go(x, z){
     if (Math.abs(z) > 450 || Math.abs(x) > 800){
         return true;
@@ -527,7 +541,7 @@ function updateCameraArrow() {
   const direction = -camera.rotation.y;
 
   // 将方向转换为小地图上的相对位置
-  const arrowX = position.x / 5 + 110; // 假设小地图宽度为400px，中心为200px
+  const arrowX = position.x / 5 + 180; // 假设小地图宽度为400px，中心为200px
   const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
 
   // 更新箭头的位置

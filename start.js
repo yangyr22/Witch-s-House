@@ -6,7 +6,7 @@ import { init_4_deep, animate_4_deep } from './room4_deep.js';
 import { init_5, animate_5 } from './room5.js';
 import { init_6, animate_6 } from './room6.js';
 
-var current_room = 1;
+var current_room = 5;
 var last_room = 2;
 var temp = 0;
 var mid = 0;
@@ -21,6 +21,7 @@ let paperElement, paperResultElement, yesButton3, noButton3;
 let pumpkinElement, pumpkinResultElement, yesButton4, noButton4;
 let manElement, womanElement, mirrorElement, plantElement;
 let pianoElement, pianoResultElement, pianoResult2Element, yesButton5, noButton5, yesButton52, noButton52;
+let musicboxElement, musicboxResultElement, yesButton6, noButton6;
 
 
 
@@ -62,6 +63,11 @@ yesButton5 = document.getElementById('yesButton_piano');
 noButton5 = document.getElementById('noButton_piano');
 yesButton52 = document.getElementById('yesButton_piano2');
 noButton52 = document.getElementById('noButton_piano2');
+
+musicboxElement = document.getElementById('musicbox');
+musicboxResultElement = document.getElementById('musicboxResult');
+yesButton6 = document.getElementById('yesButton_musicbox');
+noButton6 = document.getElementById('noButton_musicbox');
 
 manElement = document.getElementById('man');
 womanElement = document.getElementById('woman');
@@ -114,6 +120,19 @@ noButton3.addEventListener('click', function() {
     clockElement.style.display = 'none';
     selecting = false;
     message = "chasing";
+});
+
+
+yesButton6.addEventListener('click', function() {
+    musicboxResultElement.style.display = 'flex';
+    musicboxElement.style.display = 'none';
+    room_lit[2] = true;
+    endOfRead = true;
+    done['musicbox'] = true;
+});
+noButton6.addEventListener('click', function() {
+    musicboxElement.style.display = 'none';
+    selecting = false;
 });
 
 
@@ -173,6 +192,7 @@ let face_item = {
     'plant' : false,
     'mirror' : false,
     'piano': false,
+    'musicbox': false,
 };
 let item_content = {
     'book_shelf' : selectElement,
@@ -184,6 +204,7 @@ let item_content = {
     'plant' : plantElement,
     'mirror' : mirrorElement,
     'piano': pianoElement,
+    'musicbox': musicboxElement,
 };
 let done = {
     'book_shelf' : false,
@@ -195,12 +216,13 @@ let done = {
     'plant' : false,
     'mirror' : false,
     'piano': false,
+    'musicbox': false,
 }
 
 let items = {
-    'queen': false,
+    'queen': true,
     'king': false,
-    'music': true,
+    'music': false,
 }
 let room_lit = {
     0 : false,
@@ -217,6 +239,7 @@ let all_select = {
     plantElement, mirrorElement,
     pianoElement, pianoResult2Element, pianoResultElement,
     clock2Element, clock2ResultElement,
+    musicboxElement, musicboxResultElement,
 };
 
 // Add keyboard listeners
@@ -229,6 +252,7 @@ document.addEventListener('keyup', function(event) {
 
 function init(){
     if (current_room != temp){
+        document.getElementById('chairArrow').style.display = 'none';
         if (current_room === 1) {
             init_1(last_room);
         } else if (current_room === 2) {
@@ -247,7 +271,7 @@ function init(){
         } else if (current_room === 6) {
             init_6(last_room);
         }
-        temp = current_room
+        temp = current_room;
     }
 }
 
