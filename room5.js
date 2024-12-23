@@ -5,7 +5,7 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow;
+let scene, camera, renderer, cameraArrow, Minimap;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
@@ -55,14 +55,16 @@ export function init_5(last_room) {
     roughness: 1.0, // 设置粗糙度
   });
 
-  const carpetTexture = textureLoader.load('global/carpet.jpg'); // 替换为你的纹理图片路径
+  
+  const roofTexture = textureLoader.load('global/roof.png'); // 替换为你的纹理图片路径
 
-  const carpetMaterial = new THREE.MeshStandardMaterial({
+  const roofMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
-    map: carpetTexture, // 应用纹理
+    map: roofTexture, // 应用纹理
     metalness: 0.5, // 设置金属度
     roughness: 1.0, // 设置粗糙度
   });
+
 
   const WallTexture = textureLoader.load('global/wall.jpg');
 
@@ -79,7 +81,7 @@ export function init_5(last_room) {
   ground1.position.y = -200;
   scene.add(ground1);
 
-  const ground2 = new THREE.Mesh(groundGeometry, groundMaterial);
+  const ground2 = new THREE.Mesh(groundGeometry, roofMaterial);
   ground2.rotation.x = -Math.PI / 2; 
   ground2.position.y = 800;
   scene.add(ground2);
@@ -122,7 +124,7 @@ function load_items(){
     },
   );
   loader.load(
-    'room5/gift_box.glb',
+    'room5/music_box.glb',
     function ( gltf ) {
       gltf.scene.traverse(function (node) {
         if (node.isMesh) {
@@ -130,7 +132,7 @@ function load_items(){
           node.receiveShadow = true;
         }
       });
-      gltf.scene.scale.set(300, 300, 300);
+      gltf.scene.scale.set(600, 600, 600);
       gltf.scene.position.set(-350, -100, -150);
       scene.add(gltf.scene); 
     },
@@ -502,6 +504,19 @@ function cannot_go(x, z){
     if (Math.abs(z) > 450 || Math.abs(x) > 800){
         return true;
     }
+    if (z < 250 && x > 400){
+      return true;
+    }
+    if (z < 250 && x < -700){
+      return true;
+    }
+    if (Math.abs(z-50) < 320 && Math.abs(x+350) < 180){
+      return true;
+    }
+    if (Math.abs(z-50) < 320 && Math.abs(x-50) < 180){
+      return true;
+    }
+    console.log(x,z);
     return false;
 }
 

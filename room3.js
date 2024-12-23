@@ -5,7 +5,7 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow;
+let scene, camera, renderer, cameraArrow, Minimap;
 let clock;
 let mixers = [];
 let shakeAmount = 0.05;
@@ -37,6 +37,7 @@ export function init_3(last_room) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   // Add lights to the scene
   const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -54,6 +55,15 @@ export function init_3(last_room) {
   const groundMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     map: groundTexture, // 应用纹理
+    metalness: 0.5, // 设置金属度
+    roughness: 1.0, // 设置粗糙度
+  });
+  
+  const roofTexture = textureLoader.load('global/roof.png'); // 替换为你的纹理图片路径
+
+  const roofMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    map: roofTexture, // 应用纹理
     metalness: 0.5, // 设置金属度
     roughness: 1.0, // 设置粗糙度
   });
@@ -81,7 +91,7 @@ export function init_3(last_room) {
   ground1.rotation.x = -Math.PI / 2; 
   ground1.position.y = -200;
   scene.add(ground1);
-  const ground2 = new THREE.Mesh(groundGeometry, groundMaterial);
+  const ground2 = new THREE.Mesh(groundGeometry, roofMaterial);
   ground2.rotation.x = Math.PI / 2; 
   ground2.position.y = 500;
   scene.add(ground2);
@@ -103,6 +113,7 @@ export function init_3(last_room) {
   load_items();
   
   PositionCopy = 0;
+  Minimap.style.backgroundImage =  "url('minimap/room3.png')";
 }
 
 function load_items(){
@@ -338,7 +349,7 @@ function updateCameraArrow() {
   const direction = -camera.rotation.y;
 
   // 将方向转换为小地图上的相对位置
-  const arrowX = position.x / 5 + 110; // 假设小地图宽度为400px，中心为200px
+  const arrowX = position.x / 6 + 110; // 假设小地图宽度为400px，中心为200px
   const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
 
   // 更新箭头的位置

@@ -5,7 +5,7 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow;
+let scene, camera, renderer, cameraArrow, Minimap;
 let clock;
 let mixers = [];
 let cat, cat_mixer, dist, cat_animation;
@@ -45,6 +45,7 @@ export function init_2(last_room, room_lit) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   // Add lights to the scene
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
@@ -60,6 +61,17 @@ export function init_2(last_room, room_lit) {
     roughness: 1.0, // 设置粗糙度
   });
 
+  
+  const roofTexture = textureLoader.load('global/roof.png'); // 替换为你的纹理图片路径
+
+  const roofMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    map: roofTexture, // 应用纹理
+    metalness: 0.5, // 设置金属度
+    roughness: 1.0, // 设置粗糙度
+  });
+
+
   const carpetTexture = textureLoader.load('global/carpet.jpg'); // 替换为你的纹理图片路径
 
   const carpetMaterial = new THREE.MeshStandardMaterial({
@@ -74,7 +86,7 @@ export function init_2(last_room, room_lit) {
   const WallMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     map: WallTexture, // 应用纹理
-    metalness: 0.0, // 设置金属度
+    metalness: 0.2, // 设置金属度
     roughness: 0.5, // 设置粗糙度
   });
 
@@ -83,7 +95,7 @@ export function init_2(last_room, room_lit) {
   ground1.rotation.x = -Math.PI / 2; 
   ground1.position.y = -200;
   scene.add(ground1);
-  const ground2 = new THREE.Mesh(groundGeometry, groundMaterial);
+  const ground2 = new THREE.Mesh(groundGeometry, roofMaterial);
   ground2.rotation.x = Math.PI / 2; 
   ground2.position.y = 800;
   scene.add(ground2);
@@ -119,6 +131,9 @@ export function init_2(last_room, room_lit) {
   load_items(room_lit);
   
   PositionCopy = 0;
+  Minimap.style.width = '150px';
+  Minimap.style.height = '300px';
+  Minimap.style.backgroundImage =  "url('minimap/room2.png')";
 }
 
 function load_items(room_lit){
@@ -431,8 +446,8 @@ function updateCameraArrow() {
   const direction = -camera.rotation.y;
 
   // 将方向转换为小地图上的相对位置
-  const arrowX = position.x / 5 + 110; // 假设小地图宽度为400px，中心为200px
-  const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
+  const arrowX = position.x / 6 + 85; // 假设小地图宽度为400px，中心为200px
+  const arrowY = position.z / 5 + 160; // 假设小地图高度为400px，中心为200px
 
   // 更新箭头的位置
   cameraArrow.style.left = arrowX + 'px';

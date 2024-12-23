@@ -284,8 +284,12 @@ function face_door(){
 }
 
 function cannot_go(x, z){
-    if (Math.abs(x) > 150 || Math.abs(z) > 200){
+    console.log(x,z);
+    if (Math.abs(x) > 150 || z > 200 || z < -50){
         return true;
+    }
+    if (x < 50 && z > 50){
+      return true;
     }
     return false;
 }
