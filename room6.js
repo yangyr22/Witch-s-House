@@ -5,7 +5,7 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow, clock;
+let scene, camera, renderer, cameraArrow, clock, Minimap;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
@@ -45,6 +45,7 @@ export function init_6(last_room) {
 //   const pointLightHelper = new THREE.PointLightHelper( pointLight, 100 );
 //   scene.add( pointLightHelper );
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
@@ -90,6 +91,10 @@ export function init_6(last_room) {
   PositionCopy = 0;
   play = false;
   playTimer = 0;
+  read = false
+  Minimap.style.width = '200px'
+  Minimap.style.backgroundImage =  "url('minimap/room6.png')";
+  
 }
 
 function load_items(){
@@ -218,11 +223,17 @@ export function animate_6(current_room, last_room, keyPressed, face_item, messag
   else if (shakeTimer == 0){
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
-    camera = move(camera, keyPressed);    
+    camera = move(camera, keyPressed); 
+    // if ((camera.position.x + 100 <= 20) || (camera.position.x + 200 <= 20) || (camera.position.z - 150 <= 20)) {
+    //   read = true
+    //   playSound('audio/open.ogg')
+    //   showDialog();
+    // }   
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_clown()){
             play = true;
+            playSound('audio/clown.ogg');
         }
         if (face_door()){
           current_room = 5;
@@ -251,6 +262,7 @@ export function animate_6(current_room, last_room, keyPressed, face_item, messag
   const time = clock.getDelta();
   if (play === true){
     playTimer += 1;
+    
     for (const key in mixers){
         mixers[key].update(time);
     }
@@ -310,4 +322,40 @@ function updateCameraArrow() {
   // 更新箭头的方向
   const rotation = `rotate(${direction}rad)`;
   cameraArrow.style.transform = `translate(-50%, -50%) ${rotation}`;
+}
+
+// 读魔女的日记
+function showDialog() {
+  document.addEventListener('DOMContentLoaded', function () {
+    var currentPage = 1;
+    var totalPages = document.querySelectorAll('.dialog-page').length;
+
+    showPage(1);
+
+    function showPage(pageNumber) {
+        document.querySelectorAll('.dialog-page').forEach(page => {
+            page.style.display = 'none'; // 先隐藏所有页面
+        });
+        document.getElementById('WitchDiary' + pageNumber).style.display = 'block'; // 显示当前页面
+    }
+
+    // 监听空格键事件
+    document.addEventListener('keydown', function (event) {
+        if (event.code === 'Space') {
+            if (currentPage < totalPages) {
+                currentPage++; // 翻到下一页
+                showPage(currentPage);
+            } else {
+                // 最后一页，关闭对话框
+                closeDialog();
+            }
+        }
+    });
+
+    function closeDialog() {
+        document.querySelectorAll('.dialog-page').forEach(page => {
+            page.style.display = 'none'; // 隐藏所有页面
+        });
+    }
+  });
 }

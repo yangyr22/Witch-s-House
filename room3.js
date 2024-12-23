@@ -284,8 +284,21 @@ function load_items(){
     );
 }
 
+let audio
+
+export function stopMusic() {
+  const audioElement = document.getElementById('queen');
+  if (audioElement) {
+    audioElement.pause();
+  }
+}
+
 export function animate_3(current_room, last_room, keyPressed, face_item, message) {
   if(chasing === 0 && message === "chasing"){
+    stopMusic()
+    audio = new Audio('audio/loop_65.ogg');
+    audio.loop = true; 
+    audio.play();
     chasing = 1;
     scene.add(ghost);
     ghostArrow.style.display = 'block';
@@ -297,7 +310,7 @@ export function animate_3(current_room, last_room, keyPressed, face_item, messag
     ghost.position.z += (camera.position.z - ghost.position.z) / dist;
     ghost.rotation.y = to_ghost.angle() * (-1) + Math.PI / 2;
     if (to_ghost.length() <= 200){
-      window.location.href = 'options.html';
+      window.location.href = 'gameover.html';
     }
     const position = ghost.position;
     const direction = -ghost.rotation.y;
@@ -339,6 +352,10 @@ export function animate_3(current_room, last_room, keyPressed, face_item, messag
         }
         if (face_painting()  && chasing != 0){
           chasing = -1;
+          audio.pause();
+          audio = new Audio('audio/queen.ogg')
+          audio.loop = true; 
+          audio.play();
           ghost.position.y = -500;
           ghostArrow.style.display = 'none';
         }

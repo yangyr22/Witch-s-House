@@ -25,7 +25,7 @@ export function move(camera, keyPressed){
         camera.rotation.y += 2 * Math.PI;
     }
     if (keyPressed['ShiftLeft']) {
-        moveSpeed = 2.4;
+        moveSpeed = 10;
     }else{
         moveSpeed = 1.2;
     }

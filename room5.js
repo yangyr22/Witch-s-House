@@ -35,12 +35,12 @@ export function init_5(last_room) {
   document.body.appendChild(renderer.domElement);
 
   // Add lights to the scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
   scene.add(ambientLight);
-  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
+  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
   directionalLight1.position.set(0, 1000, 0);
   scene.add(directionalLight1);
-  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
+  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
   directionalLight2.position.set(-1, 1, 1);
   scene.add(directionalLight2);
   cameraArrow = document.getElementById('cameraArrow');

@@ -250,9 +250,24 @@ document.addEventListener('keyup', function(event) {
     keyPressed[event.code] = false; 
 });
 
+let sound;
+
+function loadAndPlaySound(url) {
+    const audio = new Audio(url);
+    audio.play();
+    return audio;
+  }
+
+
 function init(){
     if (current_room != temp){
         document.getElementById('chairArrow').style.display = 'none';
+        if (!sound) { 
+            sound = loadAndPlaySound('audio/open.ogg');
+          } else {
+            sound.currentTime = 0;
+            sound.play();
+          }
         if (current_room === 1) {
             init_1(last_room);
         } else if (current_room === 2) {

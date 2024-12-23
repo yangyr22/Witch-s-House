@@ -47,9 +47,13 @@ export function init_2(last_room, room_lit) {
   cameraArrow = document.getElementById('cameraArrow');
   Minimap = document.getElementById('minimapDiv');
 
-  // Add lights to the scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.06);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.08);
   scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1); // 白色光，强度为1.0
+  directionalLight.position.set(0, 200, 10); // 设置光源位置
+  scene.add(directionalLight);
+
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
@@ -130,7 +134,6 @@ export function init_2(last_room, room_lit) {
 
   load_items(room_lit);
   
-  PositionCopy = 0;
   Minimap.style.width = '150px';
   Minimap.style.height = '300px';
   if (room_lit[3] === false){

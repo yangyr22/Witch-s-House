@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Over</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 防止滚动条出现 */
+  }
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 确保图片覆盖整个屏幕，可能会裁剪 */
+  }
+</style>
+</head>
+<body>
+
+<img src="global/gameover.png" alt="Game Over">
+
+<script>
+  document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+      window.location.href = 'index.html';
+    }
+  });
+</script>
+
+</body>
+</html>

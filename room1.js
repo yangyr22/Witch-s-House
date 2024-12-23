@@ -5,7 +5,7 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow;
+let scene, camera, renderer, cameraArrow, Minimap;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let shaked = false;
@@ -37,15 +37,16 @@ export function init_1(last_room) {
   directionalLight2.position.set(-1, 1, 1);
   scene.add(directionalLight2);
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   const textureLoader = new THREE.TextureLoader();
-  const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
+  const groundTexture = textureLoader.load('global/floor.png'); // 替换为你的纹理图片路径
 
   const groundMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     map: groundTexture, // 应用纹理
-    metalness: 0.5, // 设置金属度
-    roughness: 1.0, // 设置粗糙度
+    // metalness: 0.5, // 设置金属度
+    // roughness: 1.0, // 设置粗糙度
   });
 
   const carpetTexture = textureLoader.load('global/carpet.jpg'); // 替换为你的纹理图片路径
@@ -87,6 +88,8 @@ export function init_1(last_room) {
   load_items();
 
   PositionCopy = 0;
+  Minimap.style.width = ' 300px';
+  Minimap.style.backgroundImage =  "url('minimap/room1.png')";
 }
 
 function load_items(){
@@ -226,6 +229,7 @@ function load_items(){
     }
   );
 }
+
 
 export function animate_1(current_room, last_room, keyPressed, face_item, message, items) {
   if (shakeTimer > 0) {

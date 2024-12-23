@@ -60,52 +60,54 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            height: 300px;
-            width: 500px;
+            height: 500px;
+            width: 800px;
             transform: translate(-50%, -50%);
-            background-color: rgba(88, 88, 88, 0.9);
-            color: black;
+            background-image: url('global/box.png');
+            background-size: 100% 100%;
+            background-position: center; /* 居中显示 */
+            background-repeat: no-repeat; /* 不重复图片 */
             font-size: 32px;
             font-family: "Lobster", sans-serif;
             font-weight: 400;
             font-style: normal;
             padding: 10px;
-            border: 10px solid black;
             z-index: 10;
+            display: flex; /* 启用flex布局 */
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-radius: 20px;
-            display: none;
+            display: none; /* 默认不显示对话框 */
         }
         .selectDiv button {
             margin: 10px;
             padding: 10px 20px;
-            width: 100%;
+            width: 80%;
             font-size: 32px;
             font-family: "Lobster", sans-serif;
             cursor: pointer;
-            background-color: rgba(88, 88, 88, 0);
+            background-color: rgba(116, 86, 34, 0.70);
             border-color: rgba(88, 88, 88, 0);
         }
         .selectDiv button:hover{
             background-image: linear-gradient(to right, rgba(44, 44, 44, 0.3), rgba(44, 44, 44, 1),rgba(44, 44, 44, 1), rgba(44, 44, 44, 0.3));
             color: rgba(176, 176, 176, 1);
         }
+        .dialog-page {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <audio id="open" src="audio/open.ogg" autoplay></audio>
+    <!-- <audio id="open" src="audio/open.ogg" autoplay></audio> -->
     <audio id="queen" src="audio/queen.ogg" loop></audio>
     <script>
-        const openAudio = document.getElementById("open");
+        // const openAudio = document.getElementById("open");
         const nextAudio = document.getElementById("queen");
-    
-        openAudio.onended = function() {
-            setTimeout(function() {
-                nextAudio.play();
-            }, 1000);
-        };
+        setTimeout(function() {
+            nextAudio.play();
+        }, 1000);
     </script>
     <div id="minimapDiv"> 
         <div id="cameraArrow"></div>
@@ -154,6 +156,7 @@
         <button id="noButton_pumpkin">再想想</button>
     </div>
     <div class="selectDiv" id="pumpkinResult">
+        <audio id="knock" src="audio/knock.ogg" ></audio>
         <div>
             发出了不太悦耳的声音。
         </div>
@@ -230,6 +233,26 @@
         <button id="yesButton_read">是</button>
         <button id="noButton_read">再想想</button>
     </div>
+    
+    <!-- diary -->
+    <div class="selectDiv" id="WitchDiary1">
+        <div>
+            从此以后  把每一个  来这里玩的朋友
+                大家  全部  X掉了
+        </div>
+    </div>
+    <div class="selectDiv dialog-page" id="WitchDiary2" style="display: none;">
+        <div>
+            大家  都被这个家  吃掉了
+        </div>
+    </div>
+    <div class="selectDiv dialog-page" id="WitchDiary3" style="display: none;">
+        <div>
+            但是  还不够
+        </div>
+    </div>
+
+
     <div class="selectDiv" id="Read">
         <div>
             她们的眼睛颜色，会因发色各异而不同
