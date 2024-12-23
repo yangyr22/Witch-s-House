@@ -13,6 +13,7 @@ let shakeTimer = 0;
 let shaked = false;
 let PositionCopy;
 let SpaceUp = true;
+let chasing, ghost;
 
 
 export function init_3(last_room) {
@@ -114,6 +115,7 @@ export function init_3(last_room) {
   
   PositionCopy = 0;
   Minimap.style.backgroundImage =  "url('minimap/room3.png')";
+  chasing = 0;
 }
 
 function load_items(){
@@ -131,6 +133,20 @@ function load_items(){
         gltf.scene.position.set(150, -200, 250);
         gltf.scene.rotation.set(0, Math.PI, 0);
         scene.add(gltf.scene); 
+      },
+    );
+    loader.load(
+      'room3/ghost_in_a_white_sheet.glb',
+      function ( gltf ) {
+        gltf.scene.traverse(function (node) {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        gltf.scene.scale.set(160, 160, 160);
+        gltf.scene.position.set(-150, 0, -400);
+        ghost = gltf.scene;
       },
     );
     loader.load(
@@ -252,6 +268,42 @@ function load_items(){
 }
 
 export function animate_3(current_room, last_room, keyPressed, face_item) {
+  const ghostSpeed = 1;
+  if (chasing === 1){
+    ghost.position.z += ghostSpeed;
+    if (ghost.position.z > 350){
+      chasing = 2;
+      ghost.rotation.y += Math.PI / 2;
+    }
+  }
+  if (chasing === 2){
+    ghost.position.x += ghostSpeed;
+    if (ghost.position.x > 450){
+      chasing = 3;
+      ghost.rotation.y += Math.PI / 2;
+    }
+  }
+  if (chasing === 3){
+    ghost.position.z -= ghostSpeed;
+    if (ghost.position.z < -400){
+      chasing = 4;
+      ghost.rotation.y += Math.PI / 2;
+    }
+  }
+  if (chasing === 4){
+    ghost.position.x -= ghostSpeed;
+    if (ghost.position.x < -150){
+      chasing = 1;
+      ghost.rotation.y += Math.PI / 2;
+    }
+  }
+  if (chasing != 0){
+    const to_ghost = new THREE.Vector2(ghost.position.x - camera.position.x, ghost.position.z - camera.position.z);
+    console.log(to_ghost);
+    if (to_ghost.length() <= 200){
+      window.location.href = 'options.html';
+    }
+  }
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -275,8 +327,17 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
         if (face_door_2()){
           current_room = 4;
         }
+        if (face_wall()){
+          chasing = 1;
+          scene.add(ghost);
+        }
+        if (face_painting()){
+          chasing = 0;
+          ghost.position.y = -500;
+        }
       }
     }
+    console.log(camera.position.x,camera.position.z);
     if (cannot_go(camera.position.x, camera.position.z)){
         camera.position.x = x_copy;
         camera.position.z = z_copy;
@@ -307,7 +368,7 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
 }
 
 function face_door_1(){
-    if (camera.position.x >= -500 && Math.abs(camera.position.z) >= 100){
+    if (camera.position.x >= -500 || Math.abs(camera.position.z) >= 100){
         return false;
     }
     if (camera.rotation.y >= 3 * Math.PI / 4 || camera.rotation.y <= Math.PI / 4){
@@ -318,13 +379,33 @@ function face_door_1(){
 
 
 function face_door_2(){
-    if (camera.position.z >= -350 && Math.abs(camera.position.x - 150) >= 100){
+    if (camera.position.z >= -350 || Math.abs(camera.position.x - 150) >= 50){
         return false;
     }
     if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= - Math.PI / 4){
         return false;
     }
     return true;
+}
+
+function face_painting(){
+  if (camera.position.z >= -350 || Math.abs(camera.position.x + 200) >= 50){
+      return false;
+  }
+  if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= - Math.PI / 4){
+      return false;
+  }
+  return true;
+}
+
+function face_wall(){
+  if (camera.position.z <= 350 || Math.abs(camera.position.x + 150) >= 100){
+      return false;
+  }
+  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= - 3 * Math.PI / 4){
+      return false;
+  }
+  return true;
 }
 
 function cannot_go(x, z){
