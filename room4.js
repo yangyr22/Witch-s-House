@@ -5,7 +5,7 @@ import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow;
+let scene, camera, renderer, cameraArrow, Minimap;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
 let chair, chair_locked, cam_locked;
@@ -38,6 +38,7 @@ export function init_4(last_room) {
   directionalLight2.position.set(-1, 1, 1);
   scene.add(directionalLight2);
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
@@ -73,7 +74,7 @@ export function init_4(last_room) {
   ground1.position.y = -200;
   scene.add(ground1);
 
-  const carpetGeometry = new THREE.PlaneGeometry(200, 200);
+  const carpetGeometry = new THREE.PlaneGeometry(500, 500);
   const carpet = new THREE.Mesh(carpetGeometry, carpetMaterial);
   carpet.rotation.x = -Math.PI / 2; 
 //   carpet.rotation.z = Math.PI / 2;
@@ -88,8 +89,7 @@ export function init_4(last_room) {
   load_items();
 
   PositionCopy = 0;
-  chair_locked = false;
-  cam_locked = false;
+  Minimap.style.backgroundImage =  "url('minimap/room4.png')";
 }
 
 function load_items(){
@@ -162,7 +162,7 @@ function load_items(){
   );
 }
 
-export function animate_4(current_room, last_room, keyPressed, face_item) {
+export function animate_4(current_room, last_room, keyPressed, face_item, message) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -178,25 +178,10 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
     camera = move(camera, keyPressed); 
-    if (cam_locked === true){
-        camera.position.x = x_copy;
-        camera.position.z = z_copy;
-    }   
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_door()){
           current_room = 3;
-        }
-        if (face_chair() && chair_locked === false){
-          face_item['clock'] = true;
-        }
-        if (face_chair() && chair_locked && cam_locked === false){
-          camera.position.set(0, 100, 100);
-          cam_locked = true;
-        }
-        else if (cam_locked === true){
-          camera.position.set(0, 0, 160);
-          cam_locked = false;
         }
       }
     }
@@ -212,17 +197,6 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
     else{
       shaked = false;
     }
-    if (chair_locked === false){
-      const cam_move = new THREE.Vector2(camera.position.x - x_copy, camera.position.z - z_copy);
-      const to_chair = new THREE.Vector2(chair.position.x - camera.position.x, chair.position.z - camera.position.z);
-      if (to_chair.length() <= 50 && cam_move.angleTo(to_chair) <= Math.PI / 4){
-        chair.position.x += camera.position.x - x_copy;
-        chair.position.z += camera.position.z - z_copy;
-      }
-      if (Math.abs(chair.position.x) <= 10 && chair.position.z >= 100 && chair.position.z <= 140){
-        chair_locked = true;
-      }
-    }
     if ('Space' in keyPressed && keyPressed['Space'] === true){
       SpaceUp = false;
     }
@@ -233,17 +207,6 @@ export function animate_4(current_room, last_room, keyPressed, face_item) {
   updateCameraArrow();
   renderer.render(scene, camera);
   return [current_room, face_item];
-}
-
-function face_chair(){
-  console.log(camera.position, camera.rotation);
-  if (camera.position.z <= 100 || camera.position.z >= 200 || Math.abs(camera.position.x) >= 50 ){
-      return false;
-  }
-  if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= -Math.PI / 4){
-      return false;
-  }
-  return true;
 }
 
 function face_door(){
@@ -272,8 +235,8 @@ function updateCameraArrow() {
   const direction = -camera.rotation.y;
 
   // 将方向转换为小地图上的相对位置
-  const arrowX = position.x / 5 + 110; // 假设小地图宽度为400px，中心为200px
-  const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
+  const arrowX = position.x / 3.5 + 110; // 假设小地图宽度为400px，中心为200px
+  const arrowY = position.z / 3.5 + 110; // 假设小地图高度为400px，中心为200px
 
   // 更新箭头的位置
   cameraArrow.style.left = arrowX + 'px';

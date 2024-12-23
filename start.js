@@ -2,6 +2,7 @@ import { init_1, animate_1 } from './room1.js';
 import { init_2, animate_2 } from './room2.js';
 import { init_3, animate_3 } from './room3.js';
 import { init_4, animate_4 } from './room4.js';
+import { init_4_deep, animate_4_deep } from './room4_deep.js';
 import { init_5, animate_5 } from './room5.js';
 import { init_6, animate_6 } from './room6.js';
 
@@ -10,7 +11,12 @@ var last_room = 2;
 var temp = 0;
 var mid = 0;
 let keyPressed = {};
+let items = [];
+let message = "";
+let is_4_deep = true;
 let selectElement, selecting, readElement, yesButton, noButton, endOfRead;
+let clockElement, clockResultElement, yesButton2, noButton2;
+let paperElement, paperResultElement, yesButton3, noButton3;
 
 
 
@@ -18,8 +24,20 @@ selecting = false;
 endOfRead = false;
 selectElement = document.getElementById('select1');
 readElement = document.getElementById('Read');
-yesButton = document.getElementById('yesButton');
-noButton = document.getElementById('noButton');
+yesButton = document.getElementById('yesButton_read');
+noButton = document.getElementById('noButton_read');
+
+clockElement = document.getElementById('clock');
+clockResultElement = document.getElementById('clockResult');
+yesButton2 = document.getElementById('yesButton_clock');
+noButton2 = document.getElementById('noButton_clock');
+
+
+paperElement = document.getElementById('paper');
+paperResultElement = document.getElementById('paperResult');
+yesButton3 = document.getElementById('yesButton_paper');
+noButton3 = document.getElementById('noButton_paper');
+
 
 yesButton.addEventListener('click', function() {
     readElement.style.display = 'flex';
@@ -31,20 +49,55 @@ noButton.addEventListener('click', function() {
     selecting = false;
 });
 
+yesButton2.addEventListener('click', function() {
+    clockResultElement.style.display = 'flex';
+    clockElement.style.display = 'none';
+    endOfRead = true;
+    items.push('king_key');
+    done['clock'] = true;
+    message = "get_down";
+});
+noButton2.addEventListener('click', function() {
+    clockElement.style.display = 'none';
+    selecting = false;
+    message = "get_down";
+});
+
+yesButton3.addEventListener('click', function() {
+    paperResultElement.style.display = 'flex';
+    paperElement.style.display = 'none';
+    endOfRead = true;
+    message = "chasing";
+});
+noButton3.addEventListener('click', function() {
+    clockElement.style.display = 'none';
+    selecting = false;
+    message = "chasing";
+});
+
 
 let face_item = {
     'book_shelf' : false,
+    'clock' : false,
+    'paper' : false,
 };
 let item_content = {
     'book_shelf' : selectElement,
+    'clock' : clockElement,
+    'paper' : paperElement,
 };
+let done = {
+    'book_shelf' : false,
+    'clock' : false,
+    'paper' : false,
+}
 let room_lit = {
     0 : true,
     1 : true,
     2 : true,
     3 : true,
 };
-let all_select = {selectElement, readElement};
+let all_select = {selectElement, readElement, clockElement, clockResultElement, paperElement, paperResultElement};
 
 // Add keyboard listeners
 document.addEventListener('keydown', function(event) {
@@ -62,8 +115,10 @@ function init(){
             init_2(last_room, room_lit);
         } else if (current_room === 3) {
             init_3(last_room);
-        } else if (current_room === 4) {
+        } else if (current_room === 4 && is_4_deep ===false) {
             init_4(last_room);
+        } else if (current_room === 4 && is_4_deep === true) {
+            init_4_deep(last_room);
         } else if (current_room === 5) {
             init_5(last_room);
         } else if (current_room === 6) {
@@ -75,27 +130,31 @@ function init(){
 
 function animate(){
     if (current_room === 1) {
-        const [info1, info2] = animate_1(current_room, last_room, keyPressed, face_item);
+        const [info1, info2] = animate_1(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
     } else if (current_room === 2) {
-        const [info1, info2] = animate_2(current_room, last_room, keyPressed, face_item);
+        const [info1, info2] = animate_2(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
     } else if (current_room === 3) {
-        const [info1, info2] = animate_3(current_room, last_room, keyPressed, face_item);
+        const [info1, info2] = animate_3(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
-    } else if (current_room === 4) {
-        const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item);
+    } else if (current_room === 4 && is_4_deep ===false) {
+        const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item, message);
+        mid = info1;
+        face_item = info2;
+    } else if (current_room === 4 && is_4_deep ===true) {
+        const [info1, info2] = animate_4_deep(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
     } else if (current_room === 5) {
-        const [info1, info2] = animate_5(current_room, last_room, keyPressed, face_item);
+        const [info1, info2] = animate_5(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
     } else if (current_room === 6) {
-        const [info1, info2] = animate_6(current_room, last_room, keyPressed, face_item);
+        const [info1, info2] = animate_6(current_room, last_room, keyPressed, face_item, message);
         mid = info1;
         face_item = info2;
     }
@@ -114,7 +173,7 @@ function animationLoop() {
 
         // handle select
         for (const key in face_item) {
-            if (face_item[key] === true){
+            if (face_item[key] === true && done[key] === false){
                 face_item[key] = false;
                 const select = item_content[key]
                 select.style.display = 'flex'; 

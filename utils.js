@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let turnSpeed = 0.006;
+let turnSpeed = 0.02;
 let moveSpeed;
 
 export function createWall(startPoint, endPoint, WallMaterial){

@@ -5,7 +5,7 @@ import { OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader} from './three.js-dev/examples/jsm/loaders/MTLLoader.js';
 import { createWall, move } from './utils.js';
 
-let scene, camera, renderer, cameraArrow, Minimap;
+let scene, camera, renderer, cameraArrow, Minimap, ghostArrow;
 let clock;
 let mixers = [];
 let shakeAmount = 0.05;
@@ -38,6 +38,7 @@ export function init_3(last_room) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   cameraArrow = document.getElementById('cameraArrow');
+  ghostArrow = document.getElementById('ghostArrow');
   Minimap = document.getElementById('minimapDiv');
 
   // Add lights to the scene
@@ -283,42 +284,29 @@ function load_items(){
     );
 }
 
-export function animate_3(current_room, last_room, keyPressed, face_item) {
-  const ghostSpeed = 1;
+export function animate_3(current_room, last_room, keyPressed, face_item, message) {
+  if(chasing === 0 && message === "chasing"){
+    chasing = 1;
+    scene.add(ghost);
+    ghostArrow.style.display = 'block';
+  }
   if (chasing === 1){
-    ghost.position.z += ghostSpeed;
-    if (ghost.position.z > 350){
-      chasing = 2;
-      ghost.rotation.y += Math.PI / 2;
-    }
-  }
-  if (chasing === 2){
-    ghost.position.x += ghostSpeed;
-    if (ghost.position.x > 450){
-      chasing = 3;
-      ghost.rotation.y += Math.PI / 2;
-    }
-  }
-  if (chasing === 3){
-    ghost.position.z -= ghostSpeed;
-    if (ghost.position.z < -400){
-      chasing = 4;
-      ghost.rotation.y += Math.PI / 2;
-    }
-  }
-  if (chasing === 4){
-    ghost.position.x -= ghostSpeed;
-    if (ghost.position.x < -150){
-      chasing = 1;
-      ghost.rotation.y += Math.PI / 2;
-    }
-  }
-  if (chasing != 0){
     const to_ghost = new THREE.Vector2(ghost.position.x - camera.position.x, ghost.position.z - camera.position.z);
-    console.log(to_ghost);
+    const dist = to_ghost.length();
+    ghost.position.x += (camera.position.x - ghost.position.x) / dist;
+    ghost.position.z += (camera.position.z - ghost.position.z) / dist;
+    ghost.rotation.y = to_ghost.angle() * (-1) + Math.PI / 2;
     if (to_ghost.length() <= 200){
       window.location.href = 'options.html';
     }
+    const position = ghost.position;
+    const direction = -ghost.rotation.y;
+    const arrowX = position.x / 5 + 130;
+    const arrowY = position.z / 4.5 + 110;
+    ghostArrow.style.left = arrowX + 'px';
+    ghostArrow.style.top = arrowY + 'px';
+    const rotation = `rotate(${direction}rad)`;
+    ghostArrow.style.transform = `translate(-50%, -50%) ${rotation}`;
   }
   if (shakeTimer > 0) {
     shakeTimer--;
@@ -337,23 +325,22 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
     camera = move(camera, keyPressed);
     if (keyPressed['Space']){
       if (SpaceUp === true) {
-        if (face_door_1()){
+        if (face_door_1() && chasing === 0){
           current_room = 2;
         }
-        if (face_door_2()){
+        if (face_door_2() && chasing === 0){
           current_room = 4;
         }
         if (face_wall()){
-          chasing = 1;
-          scene.add(ghost);
+          face_item['paper'] = true;
         }
-        if (face_painting()){
-          chasing = 0;
+        if (face_painting()  && chasing != 0){
+          chasing = -1;
           ghost.position.y = -500;
+          ghostArrow.style.display = 'none';
         }
       }
     }
-    console.log(camera.position.x,camera.position.z);
     if (cannot_go(camera.position.x, camera.position.z)){
         camera.position.x = x_copy;
         camera.position.z = z_copy;
@@ -424,6 +411,16 @@ function face_wall(){
   return true;
 }
 
+function face_pumpkin(){
+  if (camera.position.z <= 350 || Math.abs(camera.position.x + 150) >= 100){
+      return false;
+  }
+  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= - 3 * Math.PI / 4){
+      return false;
+  }
+  gltf.scene.position.set(-100, -150, -100);
+}
+
 function cannot_go(x, z){
     if (Math.abs(x) > 550 || Math.abs(z) > 400){
       return true;
@@ -434,7 +431,7 @@ function cannot_go(x, z){
     if(x < -450 && z > 50 && z < 250){
         return true;
     }
-    if(x < 400 && x > -100 && z > 50 && z < 350){
+    if(x < 400 && x > -100 && z > 50 && z < 300){
         return true;
     }
     return false;

@@ -203,7 +203,7 @@ function load_items(){
 );
 }
 
-export function animate_6(current_room, last_room, keyPressed, face_item) {
+export function animate_6(current_room, last_room, keyPressed, face_item, message) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;

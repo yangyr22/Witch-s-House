@@ -22,7 +22,7 @@
             left: 20px;
             height: 200px;
             width: 200px;
-            background-image: url('minimap/minimap.png'); /* 设置背景图片 */
+            background-image: url('minimap/room1.png'); /* 设置背景图片 */
             background-size: cover; /* 覆盖整个div */
             background-position: center;
             border: 2px solid gray;
@@ -37,6 +37,17 @@
             border-left: 10px solid transparent; 
             border-right: 10px solid transparent; 
             border-bottom: 10px solid green;
+        }
+        
+        #ghostArrow{
+            position: absolute; 
+            width: 0; 
+            height: 0; 
+            color: red;
+            border-left: 10px solid transparent; 
+            border-right: 10px solid transparent; 
+            border-bottom: 10px solid red;
+            display:none;
         }
         .selectDiv {
             position: absolute;
@@ -60,14 +71,6 @@
             border-radius: 20px;
             display: none;
         }
-        /* .selectDiv .english {
-            font-family: "Lobster", sans-serif;
-        }
-
-        /* 中文字体 */
-        /* .selectDiv .chinese {
-            font-family: "Microsoft YaHei", "SimHei", sans-serif;
-        } */
         .selectDiv button {
             margin: 10px;
             padding: 10px 20px;
@@ -99,12 +102,37 @@
     </script>
     <div id="minimapDiv"> 
         <div id="cameraArrow"></div>
+        <div id="ghostArrow"></div>
     </div>
     <div id="room" data-param="value"></div>
+    <div class="selectDiv" id="paper">
+        <div>
+            ……在墙壁裂缝的深处，能隐约看到夹着一张白纸。
+        </div>
+        <button id="yesButton_paper">抽出来</button>
+        <button id="noButton_paper">再想想</button>
+    </div>
+    <div class="selectDiv" id="paperResult">
+        <div>
+            拿到 谱子 。
+        </div>
+    </div>    
+    <div class="selectDiv" id="clock">
+        <div>
+            是 时钟 吗？
+        </div>
+        <button id="yesButton_clock">是</button>
+        <button id="noButton_clock">再想想</button>
+    </div>    
+    <div class="selectDiv" id="clockResult">
+        <div>
+            发条从时钟里掉落出来
+        </div>
+    </div>
     <div class="selectDiv" id="select1">
         <div>Do you want to read the books?</div>
-        <button id="yesButton">Yes</button>
-        <button id="noButton">No</button>
+        <button id="yesButton_read">是</button>
+        <button id="noButton_read">再想想</button>
     </div>
     <div class="selectDiv" id="Read">
         <div>
