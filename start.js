@@ -104,6 +104,7 @@ function animate(){
         current_room = mid;
     }
 }
+
 //init and animate
 function animationLoop() {
     requestAnimationFrame(animationLoop);

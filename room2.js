@@ -113,18 +113,18 @@ export function init_2(last_room, room_lit) {
   carpet2.position.set(450 ,-199, 475);
   scene.add(carpet2);
 
-  scene.add(createWall(new THREE.Vector2(-525, 600), new THREE.Vector2(-525, 150), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(525, 150), new THREE.Vector2(525, 600), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-525, 600), new THREE.Vector2(-525, 250), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(525, 250), new THREE.Vector2(525, 600), WallMaterial));
   scene.add(createWall(new THREE.Vector2(-225, -750), new THREE.Vector2(225, -750), WallMaterial));
   scene.add(createWall(new THREE.Vector2(225, 750), new THREE.Vector2(-225, 750), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-225, 0), new THREE.Vector2(-225, -750), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(225, -750), new THREE.Vector2(225, 0), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-525, 150), new THREE.Vector2(-375, 150), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-225, 100), new THREE.Vector2(-225, -750), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(225, -750), new THREE.Vector2(225, 100), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-525, 250), new THREE.Vector2(-375, 250), WallMaterial));
   scene.add(createWall(new THREE.Vector2(-375, 600), new THREE.Vector2(-525, 600), WallMaterial));
   scene.add(createWall(new THREE.Vector2(525, 600), new THREE.Vector2(375, 600), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(375, 150), new THREE.Vector2(525, 150), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-375, 150), new THREE.Vector2(-225, 0), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(225, 0), new THREE.Vector2(375, 150), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(375, 250), new THREE.Vector2(525, 250), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-375, 250), new THREE.Vector2(-225, 100), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(225, 100), new THREE.Vector2(375, 250), WallMaterial));
   scene.add(createWall(new THREE.Vector2(-225, 750), new THREE.Vector2(-375, 600), WallMaterial));
   scene.add(createWall(new THREE.Vector2(375, 600), new THREE.Vector2(225, 750), WallMaterial));
 
@@ -133,7 +133,21 @@ export function init_2(last_room, room_lit) {
   PositionCopy = 0;
   Minimap.style.width = '150px';
   Minimap.style.height = '300px';
-  Minimap.style.backgroundImage =  "url('minimap/room2.png')";
+  if (room_lit[1] === false){
+    Minimap.style.backgroundImage =  "url('minimap/room2_0.png')";
+  }
+  if (room_lit[2] === false){
+    Minimap.style.backgroundImage =  "url('minimap/room2_1.png')";
+  }
+  if (room_lit[3] === false){
+    Minimap.style.backgroundImage =  "url('minimap/room2_2.png')";
+  }
+  if (room_lit[4] === false){
+    Minimap.style.backgroundImage =  "url('minimap/room2_3.png')";
+  }
+  else{
+    Minimap.style.backgroundImage =  "url('minimap/room2_4.png')";
+  }
 }
 
 function load_items(room_lit){
@@ -432,7 +446,7 @@ function face_door_3(){
 
 function cannot_go(x, z){
     if (Math.abs(x) > 200 || Math.abs(z) > 700){
-      if(z >= 180 && z <= 570 && Math.abs(x) <= 475){
+      if(z >= 280 && z <= 570 && Math.abs(x) <= 475){
         return false;
       }
       return true;

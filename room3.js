@@ -25,7 +25,7 @@ export function init_3(last_room) {
 //   camera.position.set(0, 600, 0); // 初始相机位置
 //   camera.rotation.x += -Math.PI / 2;
   if (last_room === 2){
-    camera.position.set(-550, 0, 0); // 初始相机位置
+    camera.position.set(-550, 0, 300); // 初始相机位置
     camera.rotation.y = - Math.PI / 2;
   }
   if (last_room === 4){
@@ -98,15 +98,15 @@ export function init_3(last_room) {
   scene.add(ground2);
 
   
-  const carpetGeometry = new THREE.PlaneGeometry(400, 200);
+  const carpetGeometry = new THREE.PlaneGeometry(400, 300);
   const carpet = new THREE.Mesh(carpetGeometry, carpetMaterial);
   carpet.rotation.x = -Math.PI / 2; 
-  carpet.position.set(150 ,-199, -350);
+  carpet.position.set(150 ,-199, -280);
   scene.add(carpet);
 
-  scene.add(createWall(new THREE.Vector2(-600, 450), new THREE.Vector2(-600, -250), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-600, -250), new THREE.Vector2(-300, -250), WallMaterial));
-  scene.add(createWall(new THREE.Vector2(-300, -250), new THREE.Vector2(-300, -450), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-600, 450), new THREE.Vector2(-600, -150), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-600, -150), new THREE.Vector2(-300, -150), WallMaterial));
+  scene.add(createWall(new THREE.Vector2(-300, -150), new THREE.Vector2(-300, -450), WallMaterial));
   scene.add(createWall(new THREE.Vector2(-300, -450), new THREE.Vector2(600, -450), WallMaterial));
   scene.add(createWall(new THREE.Vector2(600, -450), new THREE.Vector2(600, 450), WallMaterial));
   scene.add(createWall(new THREE.Vector2(600, 450), new THREE.Vector2(-600, 450), WallMaterial));
@@ -114,27 +114,13 @@ export function init_3(last_room) {
   load_items();
   
   PositionCopy = 0;
+  Minimap.style.width =  "240px";
   Minimap.style.backgroundImage =  "url('minimap/room3.png')";
   chasing = 0;
 }
 
 function load_items(){
     const loader = new GLTFLoader();
-    loader.load(
-      'room3/chesterfield-sofa.glb',
-      function ( gltf ) {
-        gltf.scene.traverse(function (node) {
-          if (node.isMesh) {
-            node.castShadow = true;
-            node.receiveShadow = true;
-          }
-        });
-        gltf.scene.scale.set(160, 100, 100);
-        gltf.scene.position.set(150, -200, 250);
-        gltf.scene.rotation.set(0, Math.PI, 0);
-        scene.add(gltf.scene); 
-      },
-    );
     loader.load(
       'room3/ghost_in_a_white_sheet.glb',
       function ( gltf ) {
@@ -150,6 +136,21 @@ function load_items(){
       },
     );
     loader.load(
+      'room3/halloween_pumpkin.glb',
+      function ( gltf ) {
+        gltf.scene.traverse(function (node) {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        gltf.scene.scale.set(50, 50, 50);
+        gltf.scene.position.set(-100, -150, -100);
+        // gltf.scene.rotation.set(0, Math.PI, 0);
+        scene.add(gltf.scene); 
+      },
+    );
+    loader.load(
       'room3/chesterfield-sofa.glb',
       function ( gltf ) {
         gltf.scene.traverse(function (node) {
@@ -159,7 +160,22 @@ function load_items(){
           }
         });
         gltf.scene.scale.set(160, 100, 100);
-        gltf.scene.position.set(150, -200, -50);
+        gltf.scene.position.set(150, -200, 350);
+        gltf.scene.rotation.set(0, Math.PI, 0);
+        scene.add(gltf.scene); 
+      },
+    );
+    loader.load(
+      'room3/chesterfield-sofa.glb',
+      function ( gltf ) {
+        gltf.scene.traverse(function (node) {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        gltf.scene.scale.set(160, 100, 100);
+        gltf.scene.position.set(150, -200, 50);
         scene.add(gltf.scene); 
       },
     );
@@ -173,7 +189,7 @@ function load_items(){
           }
         });
         gltf.scene.scale.set(20, 12, 15);
-        gltf.scene.position.set(150, -200, 100);
+        gltf.scene.position.set(150, -200, 200);
         gltf.scene.rotation.set(0, Math.PI, 0);
         scene.add(gltf.scene); 
       },
@@ -188,7 +204,7 @@ function load_items(){
           }
         });
         gltf.scene.scale.set(200, 200, 200);
-        gltf.scene.position.set(-500, -200, 175);
+        gltf.scene.position.set(-500, -200, 125);
         gltf.scene.rotation.set(0, - Math.PI / 6, 0);
         scene.add(gltf.scene); 
       },
@@ -250,7 +266,7 @@ function load_items(){
             'global/door1/models/8.obj',
             function (object) {
             object.scale.set(5, 5, 5);
-            object.position.z = -70;
+            object.position.z = 230;
             object.position.x = -510;
             object.position.y = 85;
             object.rotation.y = Math.PI / 2;
@@ -368,7 +384,7 @@ export function animate_3(current_room, last_room, keyPressed, face_item) {
 }
 
 function face_door_1(){
-    if (camera.position.x >= -500 || Math.abs(camera.position.z) >= 100){
+    if (camera.position.x >= -500 || Math.abs(camera.position.z - 300) >= 100){
         return false;
     }
     if (camera.rotation.y >= 3 * Math.PI / 4 || camera.rotation.y <= Math.PI / 4){
@@ -412,13 +428,13 @@ function cannot_go(x, z){
     if (Math.abs(x) > 550 || Math.abs(z) > 400){
       return true;
     }
-    if(x < -300 && z < -200){
+    if(x < -300 && z < -100){
       return true;
     }
-    if(x < -450 && z > 100 && z < 250){
+    if(x < -450 && z > 50 && z < 250){
         return true;
     }
-    if(x < 400 && x > -100 && z > -150 && z < 350){
+    if(x < 400 && x > -100 && z > 50 && z < 350){
         return true;
     }
     return false;
@@ -430,8 +446,8 @@ function updateCameraArrow() {
   const direction = -camera.rotation.y;
 
   // 将方向转换为小地图上的相对位置
-  const arrowX = position.x / 6 + 110; // 假设小地图宽度为400px，中心为200px
-  const arrowY = position.z / 5 + 110; // 假设小地图高度为400px，中心为200px
+  const arrowX = position.x / 5 + 130; // 假设小地图宽度为400px，中心为200px
+  const arrowY = position.z / 4.5 + 110; // 假设小地图高度为400px，中心为200px
 
   // 更新箭头的位置
   cameraArrow.style.left = arrowX + 'px';
