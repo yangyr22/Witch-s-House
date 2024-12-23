@@ -334,6 +334,9 @@ export function animate_3(current_room, last_room, keyPressed, face_item, messag
         if (face_wall()){
           face_item['paper'] = true;
         }
+        if (face_pumpkin()){
+          face_item['pumpkin'] = true;
+        }
         if (face_painting()  && chasing != 0){
           chasing = -1;
           ghost.position.y = -500;
@@ -412,13 +415,13 @@ function face_wall(){
 }
 
 function face_pumpkin(){
-  if (camera.position.z <= 350 || Math.abs(camera.position.x + 150) >= 100){
+  if (camera.position.z >= 200 || camera.position.z <= 100 || Math.abs(camera.position.x + 100) >= 100){
       return false;
   }
-  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= - 3 * Math.PI / 4){
+  if (camera.rotation.y >= Math.PI / 4 || camera.rotation.y <= - Math.PI / 4){
       return false;
   }
-  gltf.scene.position.set(-100, -150, -100);
+  return true;
 }
 
 function cannot_go(x, z){

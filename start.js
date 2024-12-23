@@ -6,8 +6,8 @@ import { init_4_deep, animate_4_deep } from './room4_deep.js';
 import { init_5, animate_5 } from './room5.js';
 import { init_6, animate_6 } from './room6.js';
 
-var current_room = 3;
-var last_room = 2;
+var current_room = 2;
+var last_room = 0;
 var temp = 0;
 var mid = 0;
 let keyPressed = {};
@@ -17,6 +17,7 @@ let is_4_deep = true;
 let selectElement, selecting, readElement, yesButton, noButton, endOfRead;
 let clockElement, clockResultElement, yesButton2, noButton2;
 let paperElement, paperResultElement, yesButton3, noButton3;
+let pumpkinElement, pumpkinResultElement, yesButton4, noButton4;
 
 
 
@@ -37,6 +38,12 @@ paperElement = document.getElementById('paper');
 paperResultElement = document.getElementById('paperResult');
 yesButton3 = document.getElementById('yesButton_paper');
 noButton3 = document.getElementById('noButton_paper');
+
+
+pumpkinElement = document.getElementById('pumpkin');
+pumpkinResultElement = document.getElementById('pumpkinResult');
+yesButton4 = document.getElementById('yesButton_pumpkin');
+noButton4 = document.getElementById('noButton_pumpkin');
 
 
 yesButton.addEventListener('click', function() {
@@ -76,28 +83,49 @@ noButton3.addEventListener('click', function() {
 });
 
 
+yesButton4.addEventListener('click', function() {
+    pumpkinResultElement.style.display = 'flex';
+    pumpkinElement.style.display = 'none';
+    endOfRead = true;
+    done['pumpkin'] = true;
+    room_lit[1] = true;
+});
+noButton4.addEventListener('click', function() {
+    pumpkinElement.style.display = 'none';
+    selecting = false;
+});
+
+
 let face_item = {
     'book_shelf' : false,
     'clock' : false,
+    'paper' : false,
     'paper' : false,
 };
 let item_content = {
     'book_shelf' : selectElement,
     'clock' : clockElement,
     'paper' : paperElement,
+    'pumpkin' : pumpkinElement,
 };
 let done = {
     'book_shelf' : false,
     'clock' : false,
     'paper' : false,
+    'pumpkin' : false,
 }
 let room_lit = {
-    0 : true,
-    1 : true,
-    2 : true,
-    3 : true,
+    0 : false,
+    1 : false,
+    2 : false,
+    3 : false,
 };
-let all_select = {selectElement, readElement, clockElement, clockResultElement, paperElement, paperResultElement};
+let all_select = {
+    selectElement, readElement, 
+    clockElement, clockResultElement, 
+    paperElement, paperResultElement,
+    pumpkinElement, pumpkinResultElement,
+};
 
 // Add keyboard listeners
 document.addEventListener('keydown', function(event) {

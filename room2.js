@@ -133,16 +133,16 @@ export function init_2(last_room, room_lit) {
   PositionCopy = 0;
   Minimap.style.width = '150px';
   Minimap.style.height = '300px';
-  if (room_lit[1] === false){
+  if (room_lit[0] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_0.png')";
   }
-  if (room_lit[2] === false){
+  else if (room_lit[1] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_1.png')";
   }
-  if (room_lit[3] === false){
+  else if (room_lit[2] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_2.png')";
   }
-  if (room_lit[4] === false){
+  else if (room_lit[3] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_3.png')";
   }
   else{
@@ -347,7 +347,7 @@ function load_items(room_lit){
   );
 }
 
-export function animate_2(current_room, last_room, keyPressed, face_item) {
+export function animate_2(current_room, last_room, keyPressed, face_item, message) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
