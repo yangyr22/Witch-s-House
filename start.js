@@ -11,13 +11,14 @@ var last_room = 0;
 var temp = 0;
 var mid = 0;
 let keyPressed = {};
-let items = [];
 let message = "";
 let is_4_deep = true;
-let selectElement, selecting, readElement, yesButton, noButton, endOfRead;
+let is_4_locked = true;
+let selectElement, selecting, readElement, yesButton1, noButton1, endOfRead;
 let clockElement, clockResultElement, yesButton2, noButton2;
 let paperElement, paperResultElement, yesButton3, noButton3;
 let pumpkinElement, pumpkinResultElement, yesButton4, noButton4;
+let manElement, womanElement, mirrorElement, plantElement;
 
 
 
@@ -25,8 +26,8 @@ selecting = false;
 endOfRead = false;
 selectElement = document.getElementById('select1');
 readElement = document.getElementById('Read');
-yesButton = document.getElementById('yesButton_read');
-noButton = document.getElementById('noButton_read');
+yesButton1 = document.getElementById('yesButton_read');
+noButton1 = document.getElementById('noButton_read');
 
 clockElement = document.getElementById('clock');
 clockResultElement = document.getElementById('clockResult');
@@ -45,29 +46,34 @@ pumpkinResultElement = document.getElementById('pumpkinResult');
 yesButton4 = document.getElementById('yesButton_pumpkin');
 noButton4 = document.getElementById('noButton_pumpkin');
 
+manElement = document.getElementById('man');
+womanElement = document.getElementById('woman');
+mirrorElement = document.getElementById('mirror');
+plantElement = document.getElementById('plant');
 
-yesButton.addEventListener('click', function() {
+yesButton1.addEventListener('click', function() {
     readElement.style.display = 'flex';
     selectElement.style.display = 'none';
     endOfRead = true;
 });
-noButton.addEventListener('click', function() {
+noButton1.addEventListener('click', function() {
     selectElement.style.display = 'none';
     selecting = false;
 });
 
+// items.push('queen_key');
+// done['clock'] = true;
+// message = "get_down";
 yesButton2.addEventListener('click', function() {
     clockResultElement.style.display = 'flex';
     clockElement.style.display = 'none';
     endOfRead = true;
-    items.push('king_key');
-    done['clock'] = true;
-    message = "get_down";
+    is_4_deep = false;
+    init_4(last_room);
 });
 noButton2.addEventListener('click', function() {
     clockElement.style.display = 'none';
     selecting = false;
-    message = "get_down";
 });
 
 yesButton3.addEventListener('click', function() {
@@ -87,32 +93,62 @@ yesButton4.addEventListener('click', function() {
     pumpkinResultElement.style.display = 'flex';
     pumpkinElement.style.display = 'none';
     endOfRead = true;
+    is_4_locked = false;
     done['pumpkin'] = true;
-    room_lit[1] = true;
+    room_lit[3] = true;
 });
 noButton4.addEventListener('click', function() {
     pumpkinElement.style.display = 'none';
     selecting = false;
 });
 
+const list = ['man', 'woman', 'mirror', 'plant']
+for (const key in list){
+    document.getElementById('noButton_' + list[key]).addEventListener('click', function() {
+        document.getElementById(list[key]).style.display = 'none';
+        selecting = false;
+    });
+    document.getElementById('yesButton_' + list[key]).addEventListener('click', function() {
+        document.getElementById(list[key]).style.display = 'none';
+        selecting = false;
+    });
+}
 
 let face_item = {
     'book_shelf' : false,
     'clock' : false,
     'paper' : false,
     'paper' : false,
+    'man' : false,
+    'woman' : false,
+    'plant' : false,
+    'mirror' : false,
 };
 let item_content = {
     'book_shelf' : selectElement,
     'clock' : clockElement,
     'paper' : paperElement,
     'pumpkin' : pumpkinElement,
+    'man' : manElement,
+    'woman' : womanElement,
+    'plant' : plantElement,
+    'mirror' : mirrorElement,
 };
 let done = {
     'book_shelf' : false,
     'clock' : false,
     'paper' : false,
     'pumpkin' : false,
+    'man' : false,
+    'woman' : false,
+    'plant' : false,
+    'mirror' : false,
+}
+
+let items = {
+    'queen': false,
+    'king': false,
+    'piano': false,
 }
 let room_lit = {
     0 : false,
@@ -125,6 +161,8 @@ let all_select = {
     clockElement, clockResultElement, 
     paperElement, paperResultElement,
     pumpkinElement, pumpkinResultElement,
+    manElement, womanElement,
+    plantElement, mirrorElement,
 };
 
 // Add keyboard listeners
@@ -142,7 +180,10 @@ function init(){
         } else if (current_room === 2) {
             init_2(last_room, room_lit);
         } else if (current_room === 3) {
-            init_3(last_room);
+            init_3(last_room, room_lit);
+        } else if (current_room === 4 && is_4_locked === true) {
+            current_room = last_room;
+            temp = current_room;
         } else if (current_room === 4 && is_4_deep ===false) {
             init_4(last_room);
         } else if (current_room === 4 && is_4_deep === true) {

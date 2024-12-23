@@ -8,7 +8,6 @@ import { createWall, move } from './utils.js';
 let scene, camera, renderer, cameraArrow, Minimap;
 let shakeAmount = 0.05;
 let shakeTimer = 0; 
-let chair, chair_locked, cam_locked;
 let shaked = false;
 let PositionCopy;
 let SpaceUp = true;
@@ -21,7 +20,7 @@ export function init_4_deep(last_room) {
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 10000);
 //   camera.position.set(0, 600, 0); // 初始相机位置
   // camera.rotation.y += -Math.PI;
-  camera.position.set(0, 0, 300); // 初始相机位置
+  camera.position.set(0, 0, 350); // 初始相机位置
 
   // Create the renderer and add it to the DOM
   renderer = new THREE.WebGLRenderer();
@@ -89,8 +88,6 @@ export function init_4_deep(last_room) {
   load_items();
 
   PositionCopy = 0;
-  chair_locked = false;
-  cam_locked = false;
   Minimap.style.backgroundImage =  "url('minimap/room4.png')";
 }
 
@@ -110,6 +107,67 @@ function load_items(){
       scene.add(gltf.scene); 
     },
   );
+  loader.load(
+    'room4/man.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(30, 30, 30);
+    //   gltf.scene.rotation.set(0, Math.PI / 2, 0);
+      gltf.scene.position.set(-360, -230, -400);
+      scene.add(gltf.scene); 
+    },
+  );  
+  loader.load(
+    'room4/woman.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(70, 70, 70);
+    //   gltf.scene.rotation.set(0, Math.PI / 2, 0);
+      gltf.scene.position.set(360, 0, -400);
+      scene.add(gltf.scene); 
+    },
+  );
+  loader.load(
+    'room4/potted_plant.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(600, 600, 600);
+    //   gltf.scene.rotation.set(0, Math.PI / 2, 0);
+      gltf.scene.position.set(360, -200, 400);
+      scene.add(gltf.scene); 
+    },
+  );
+  
+  loader.load(
+    'room4/mirror.glb',
+    function ( gltf ) {
+      gltf.scene.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+      gltf.scene.scale.set(200, 200, 200);
+      gltf.scene.rotation.set(0, 3 * Math.PI / 4, 0);
+      gltf.scene.position.set(-360, -200, 400);
+      scene.add(gltf.scene); 
+    },
+  );
   const mtlLoader = new MTLLoader();
   mtlLoader.load(
     'global/door1/models/8.mtl',
@@ -121,7 +179,7 @@ function load_items(){
         'global/door1/models/8.obj',
         function (object) {
         object.scale.set(6, 6, 6);
-        object.position.z = 445;
+        object.position.z = 595;
         object.position.x = 70;
         object.position.y = 145;
         object.traverse(function (child) {
@@ -134,33 +192,6 @@ function load_items(){
         },
     );
     },
-  );
-  mtlLoader.load(
-    'room1/chair/Straight_Leg_Chair_Honey_V1.mtl',
-    function (materialCreator) {
-        materialCreator.preload(); // Preload materials
-        const objLoader = new OBJLoader();
-        objLoader.setMaterials(materialCreator);
-        objLoader.load(
-          'room1/chair/Straight_Leg_Chair_Honey_V1.obj',
-          function (object) {
-            object.scale.set(1.5, 1.5, 1.5);
-            object.rotation.x = -Math.PI / 2;
-            object.rotation.z = -Math.PI / 2;
-            object.position.x = 200;
-            object.position.y = -110;
-            object.position.z = 0;
-            object.traverse(function (child) {
-              if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-              }
-            });
-            chair = object;
-            scene.add(chair);
-          },
-        );
-      }
   );
 }
 
@@ -179,28 +210,28 @@ export function animate_4_deep(current_room, last_room, keyPressed, face_item, m
   else if (shakeTimer == 0){
     const x_copy = camera.position.x;
     const z_copy = camera.position.z;
-    camera = move(camera, keyPressed); 
-    if (cam_locked === true){
-        camera.position.x = x_copy;
-        camera.position.z = z_copy;
-    }   
+    camera = move(camera, keyPressed);
     if (keyPressed['Space']){
       if (SpaceUp === true) {
         if (face_door()){
           current_room = 3;
         }
-        if (face_chair() && chair_locked && cam_locked === false){
-          camera.position.set(0, 100, 100);
-          cam_locked = true;
+        if(face_clock()){
+            face_item['clock'] = true;
         }
-        else if (cam_locked === true){
-          face_item['clock'] = true;
+        if (face_man()){
+            face_item['man'] = true;
+        }
+        if (face_woman()){
+            face_item['woman'] = true;
+        }
+        if (face_mirror()){
+            face_item['mirror'] = true;
+        }
+        if (face_plant()){
+            face_item['plant'] = true;
         }
       }
-    }
-    if(message === "get_down" && cam_locked){
-      camera.position.set(0, 0, 160);
-      cam_locked = false;
     }
     if (cannot_go(camera.position.x, camera.position.z)){
         camera.position.x = x_copy;
@@ -214,17 +245,6 @@ export function animate_4_deep(current_room, last_room, keyPressed, face_item, m
     else{
       shaked = false;
     }
-    if (chair_locked === false){
-      const cam_move = new THREE.Vector2(camera.position.x - x_copy, camera.position.z - z_copy);
-      const to_chair = new THREE.Vector2(chair.position.x - camera.position.x, chair.position.z - camera.position.z);
-      if (to_chair.length() <= 50 && cam_move.angleTo(to_chair) <= Math.PI / 4){
-        chair.position.x += camera.position.x - x_copy;
-        chair.position.z += camera.position.z - z_copy;
-      }
-      if (Math.abs(chair.position.x) <= 10 && chair.position.z >= 100 && chair.position.z <= 140){
-        chair_locked = true;
-      }
-    }
     if ('Space' in keyPressed && keyPressed['Space'] === true){
       SpaceUp = false;
     }
@@ -237,8 +257,32 @@ export function animate_4_deep(current_room, last_room, keyPressed, face_item, m
   return [current_room, face_item];
 }
 
-function face_chair(){
-  console.log(camera.position, camera.rotation);
+function face_man(){
+  if (camera.position.z >= -300 || camera.position.x >= -300 ){
+      return false;
+  }
+  return true;
+}
+function face_woman(){
+  if (camera.position.z >= -300 || camera.position.x <= 300 ){
+      return false;
+  }
+  return true;
+}
+function face_mirror(){
+  if (camera.position.z <= 300 || camera.position.x >= -300 ){
+      return false;
+  }
+  return true;
+}
+function face_plant(){
+  if (camera.position.z <= 300 || camera.position.x <= 300 ){
+      return false;
+  }
+  return true;
+}
+
+function face_clock(){
   if (camera.position.z <= 100 || camera.position.z >= 200 || Math.abs(camera.position.x) >= 50 ){
       return false;
   }
@@ -259,7 +303,7 @@ function face_door(){
 }
 
 function cannot_go(x, z){
-    if (Math.abs(x) > 300 || Math.abs(z) > 300){
+    if (Math.abs(x) > 350 || Math.abs(z) > 350){
         return true;
     }
     if (Math.abs(x) < 100 && Math.abs(z) < 100){

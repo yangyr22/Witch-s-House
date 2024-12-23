@@ -48,7 +48,7 @@ export function init_2(last_room, room_lit) {
   Minimap = document.getElementById('minimapDiv');
 
   // Add lights to the scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.06);
   scene.add(ambientLight);
 
   const textureLoader = new THREE.TextureLoader();
@@ -133,16 +133,16 @@ export function init_2(last_room, room_lit) {
   PositionCopy = 0;
   Minimap.style.width = '150px';
   Minimap.style.height = '300px';
-  if (room_lit[0] === false){
+  if (room_lit[3] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_0.png')";
   }
-  else if (room_lit[1] === false){
+  else if (room_lit[2] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_1.png')";
   }
-  else if (room_lit[2] === false){
+  else if (room_lit[0] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_2.png')";
   }
-  else if (room_lit[3] === false){
+  else if (room_lit[1] === false){
     Minimap.style.backgroundImage =  "url('minimap/room2_3.png')";
   }
   else{

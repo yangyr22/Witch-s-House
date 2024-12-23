@@ -48,6 +48,13 @@
             border-right: 10px solid transparent; 
             border-bottom: 10px solid red;
             display:none;
+        }        
+        #chairArrow{
+            position: absolute; 
+            width: 10px; 
+            height: 10px; 
+            background-color: red;
+            display:none;
         }
         .selectDiv {
             position: absolute;
@@ -103,6 +110,7 @@
     <div id="minimapDiv"> 
         <div id="cameraArrow"></div>
         <div id="ghostArrow"></div>
+        <div id="chairArrow"></div>
     </div>
     <div id="room" data-param="value"></div>
     <div class="selectDiv" id="paper">
@@ -135,6 +143,35 @@
         </div>
         <button id="yesButton_clock">是</button>
         <button id="noButton_clock">再想想</button>
+    </div>    
+    
+    <div class="selectDiv" id="man">
+        <div>
+            是 男人 吗？
+        </div>
+        <button id="yesButton_man">是</button>
+        <button id="noButton_man">再想想</button>
+    </div>    
+    <div class="selectDiv" id="woman">
+        <div>
+            是 女人 吗？
+        </div>
+        <button id="yesButton_woman">是</button>
+        <button id="noButton_woman">再想想</button>
+    </div>    
+    <div class="selectDiv" id="mirror">
+        <div>
+            是 镜子 吗？
+        </div>
+        <button id="yesButton_mirror">是</button>
+        <button id="noButton_mirror">再想想</button>
+    </div>    
+    <div class="selectDiv" id="plant">
+        <div>
+            是 植物 吗？
+        </div>
+        <button id="yesButton_plant">是</button>
+        <button id="noButton_plant">再想想</button>
     </div>    
     <div class="selectDiv" id="clockResult">
         <div>
