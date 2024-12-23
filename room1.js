@@ -227,7 +227,7 @@ function load_items(){
   );
 }
 
-export function animate_1(current_room, last_room, keyPressed, face_item) {
+export function animate_1(current_room, last_room, keyPressed, face_item, message, items) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -250,6 +250,9 @@ export function animate_1(current_room, last_room, keyPressed, face_item) {
         }
         if (face_door()){
           current_room = 2;
+        }
+        if (face_piano() && items['music']=== true){
+          face_item['piano'] = true;
         }
       }
     }
@@ -289,6 +292,17 @@ function face_book(){
 
 function face_door(){
   if (camera.position.x <= 100 || camera.position.z <= 300 || camera.position.x >= 300){
+      return false;
+  }
+  if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){
+      return false;
+  }
+  return true;
+}
+
+
+function face_piano(){
+  if (camera.position.z <= -300 || camera.position.z >= 0 || Math.abs(camera.position.x) >= 250){
       return false;
   }
   if (camera.rotation.y <= 3 * Math.PI / 4 && camera.rotation.y >= -3 * Math.PI / 4){

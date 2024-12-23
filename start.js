@@ -6,8 +6,8 @@ import { init_4_deep, animate_4_deep } from './room4_deep.js';
 import { init_5, animate_5 } from './room5.js';
 import { init_6, animate_6 } from './room6.js';
 
-var current_room = 2;
-var last_room = 0;
+var current_room = 1;
+var last_room = 2;
 var temp = 0;
 var mid = 0;
 let keyPressed = {};
@@ -16,9 +16,11 @@ let is_4_deep = true;
 let is_4_locked = true;
 let selectElement, selecting, readElement, yesButton1, noButton1, endOfRead;
 let clockElement, clockResultElement, yesButton2, noButton2;
+let clock2Element, clock2ResultElement, yesButton22, noButton22;
 let paperElement, paperResultElement, yesButton3, noButton3;
 let pumpkinElement, pumpkinResultElement, yesButton4, noButton4;
 let manElement, womanElement, mirrorElement, plantElement;
+let pianoElement, pianoResultElement, pianoResult2Element, yesButton5, noButton5, yesButton52, noButton52;
 
 
 
@@ -35,6 +37,12 @@ yesButton2 = document.getElementById('yesButton_clock');
 noButton2 = document.getElementById('noButton_clock');
 
 
+clock2Element = document.getElementById('clock2');
+clock2ResultElement = document.getElementById('clock2Result');
+yesButton22 = document.getElementById('yesButton_clock2');
+noButton22 = document.getElementById('noButton_clock2');
+
+
 paperElement = document.getElementById('paper');
 paperResultElement = document.getElementById('paperResult');
 yesButton3 = document.getElementById('yesButton_paper');
@@ -45,6 +53,15 @@ pumpkinElement = document.getElementById('pumpkin');
 pumpkinResultElement = document.getElementById('pumpkinResult');
 yesButton4 = document.getElementById('yesButton_pumpkin');
 noButton4 = document.getElementById('noButton_pumpkin');
+
+
+pianoElement = document.getElementById('piano');
+pianoResultElement = document.getElementById('pianoResult');
+pianoResult2Element = document.getElementById('pianoResult2');
+yesButton5 = document.getElementById('yesButton_piano');
+noButton5 = document.getElementById('noButton_piano');
+yesButton52 = document.getElementById('yesButton_piano2');
+noButton52 = document.getElementById('noButton_piano2');
 
 manElement = document.getElementById('man');
 womanElement = document.getElementById('woman');
@@ -61,13 +78,11 @@ noButton1.addEventListener('click', function() {
     selecting = false;
 });
 
-// items.push('queen_key');
-// done['clock'] = true;
-// message = "get_down";
 yesButton2.addEventListener('click', function() {
     clockResultElement.style.display = 'flex';
     clockElement.style.display = 'none';
     endOfRead = true;
+    items['queen'] = true;
     is_4_deep = false;
     init_4(last_room);
 });
@@ -76,9 +91,22 @@ noButton2.addEventListener('click', function() {
     selecting = false;
 });
 
+
+yesButton22.addEventListener('click', function() {
+    clock2ResultElement.style.display = 'flex';
+    clock2Element.style.display = 'none';
+    endOfRead = true;
+    room_lit[1] = true;
+});
+noButton22.addEventListener('click', function() {
+    clock2Element.style.display = 'none';
+    selecting = false;
+});
+
 yesButton3.addEventListener('click', function() {
     paperResultElement.style.display = 'flex';
     paperElement.style.display = 'none';
+    items['music'] = true;
     endOfRead = true;
     message = "chasing";
 });
@@ -102,6 +130,27 @@ noButton4.addEventListener('click', function() {
     selecting = false;
 });
 
+
+yesButton5.addEventListener('click', function() {
+    pianoResultElement.style.display = 'flex';
+    pianoElement.style.display = 'none';
+});
+noButton4.addEventListener('click', function() {
+    pianoElement.style.display = 'none';
+    selecting = false;
+});
+yesButton52.addEventListener('click', function() {
+    window.location.href = 'options.html';
+});
+noButton52.addEventListener('click', function() {
+    pianoResult2Element.style.display = 'flex';
+    pianoResultElement.style.display = 'none';
+    endOfRead = true;
+    items['king'] = true;
+    room_lit[0] = true;
+    done['piano'] = true;
+});
+
 const list = ['man', 'woman', 'mirror', 'plant']
 for (const key in list){
     document.getElementById('noButton_' + list[key]).addEventListener('click', function() {
@@ -123,6 +172,7 @@ let face_item = {
     'woman' : false,
     'plant' : false,
     'mirror' : false,
+    'piano': false,
 };
 let item_content = {
     'book_shelf' : selectElement,
@@ -133,6 +183,7 @@ let item_content = {
     'woman' : womanElement,
     'plant' : plantElement,
     'mirror' : mirrorElement,
+    'piano': pianoElement,
 };
 let done = {
     'book_shelf' : false,
@@ -143,12 +194,13 @@ let done = {
     'woman' : false,
     'plant' : false,
     'mirror' : false,
+    'piano': false,
 }
 
 let items = {
     'queen': false,
     'king': false,
-    'piano': false,
+    'music': true,
 }
 let room_lit = {
     0 : false,
@@ -163,6 +215,8 @@ let all_select = {
     pumpkinElement, pumpkinResultElement,
     manElement, womanElement,
     plantElement, mirrorElement,
+    pianoElement, pianoResult2Element, pianoResultElement,
+    clock2Element, clock2ResultElement,
 };
 
 // Add keyboard listeners
@@ -199,31 +253,31 @@ function init(){
 
 function animate(){
     if (current_room === 1) {
-        const [info1, info2] = animate_1(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_1(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 2) {
-        const [info1, info2] = animate_2(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_2(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 3) {
-        const [info1, info2] = animate_3(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_3(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 4 && is_4_deep ===false) {
-        const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_4(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 4 && is_4_deep ===true) {
-        const [info1, info2] = animate_4_deep(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_4_deep(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 5) {
-        const [info1, info2] = animate_5(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_5(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     } else if (current_room === 6) {
-        const [info1, info2] = animate_6(current_room, last_room, keyPressed, face_item, message);
+        const [info1, info2] = animate_6(current_room, last_room, keyPressed, face_item, message, items);
         mid = info1;
         face_item = info2;
     }

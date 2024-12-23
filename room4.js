@@ -155,7 +155,7 @@ function load_items(){
   );
 }
 
-export function animate_4(current_room, last_room, keyPressed, face_item, message) {
+export function animate_4(current_room, last_room, keyPressed, face_item, message, items) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -180,13 +180,18 @@ export function animate_4(current_room, last_room, keyPressed, face_item, messag
         if (face_door()){
           current_room = 3;
         }
-        console.log(face_chair(), chair_locked, cam_locked, chair.position)
         if (face_chair() && chair_locked && cam_locked === false){
           camera.position.set(0, 100, 100);
           cam_locked = true;
         }
         else if (cam_locked === true){
-          face_item['clock2'] = true;
+          if (items['king'] === true){
+            face_item['clock2'] = true;
+          }
+          else{
+            camera.position.set(0, 0, 160);
+            cam_locked = false;
+          }
         }
       }
     }

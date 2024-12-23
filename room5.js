@@ -44,6 +44,7 @@ export function init_5(last_room) {
   directionalLight2.position.set(-1, 1, 1);
   scene.add(directionalLight2);
   cameraArrow = document.getElementById('cameraArrow');
+  Minimap = document.getElementById('minimapDiv');
 
   const textureLoader = new THREE.TextureLoader();
   const groundTexture = textureLoader.load('global/ground.jpg'); // 替换为你的纹理图片路径
@@ -105,6 +106,7 @@ export function init_5(last_room) {
   load_items();
 
   PositionCopy = 0;
+  Minimap.style.backgroundImage =  "url('minimap/room5.png')";
 }
 
 function load_items(){
@@ -430,7 +432,7 @@ function load_items(){
   );
 }
 
-export function animate_5(current_room, last_room, keyPressed, face_item) {
+export function animate_5(current_room, last_room, keyPressed, face_item, message, items) {
   if (shakeTimer > 0) {
     shakeTimer--;
     camera.rotation.x += (Math.random() - 0.5) * shakeAmount;
@@ -516,7 +518,6 @@ function cannot_go(x, z){
     if (Math.abs(z-50) < 320 && Math.abs(x-50) < 180){
       return true;
     }
-    console.log(x,z);
     return false;
 }
 
